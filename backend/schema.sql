@@ -1,6 +1,6 @@
 create table
     users (
-        id INT GENERATED ALWAYS AS IDENTITY primary key,
+        id UUID primary key default gen_random_uuid (),
         email varchar(255) unique not null,
         name varchar(30) not null,
         password varchar(255) not null,
@@ -13,11 +13,11 @@ create table
 
 create table
     blogs (
-        id INT GENERATED ALWAYS AS IDENTITY primary key,
+        id UUID primary key default gen_random_uuid (),
         title varchar(255) not null,
         slug varchar(255) not null,
         content text not null,
-        user_id int not null,
+        user_id UUID not null,
         view int default 0,
         create_at timestamp default current_timestamp,
         update_at timestamp default current_timestamp,
@@ -27,8 +27,8 @@ create table
 
 create table
     likes (
-        user_id int not null,
-        post_id int not null,
+        user_id UUID not null,
+        post_id UUID not null,
         create_at timestamp default current_timestamp,
         constraint fk_like_user foreign key (user_id) references users (id),
         constraint fk_like_post foreign key (post_id) references blogs (id),
@@ -37,10 +37,10 @@ create table
 
 create table
     comments (
-        id INT GENERATED ALWAYS AS IDENTITY primary key,
+        id UUID primary key default gen_random_uuid (),
         comment text not null,
-        user_id int not null,
-        post_id int not null,
+        user_id UUID not null,
+        post_id UUID not null,
         create_at timestamp default current_timestamp,
         constraint fk_comment_user foreign key (user_id) references users (id),
         constraint fk_comment_post foreign key (post_id) references blogs (id)

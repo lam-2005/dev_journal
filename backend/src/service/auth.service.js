@@ -33,6 +33,31 @@ const AuthService = {
       throw error;
     }
   },
+
+  login: async (data) => {
+    try {
+      const { email, password } = data;
+
+      if (!email || !password) throw new Error("All fields are required");
+
+      const user = await AuthModel.findUserByEmail(email);
+      if (!user) throw new Error("Invalid credentials");
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if (!isPasswordCorrect) throw new Error("Invalid credentials");
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        background: user.background,
+        introduction: user.introduction,
+      };
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default AuthService;
