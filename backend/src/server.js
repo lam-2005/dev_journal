@@ -4,6 +4,8 @@ import AuthRoute from "./routes/auth.route.js";
 import pool from "./lib/pool.js";
 const app = express();
 
+app.use(express.json());
+
 app.use("/api/auth", AuthRoute);
 
 async function startServer() {
