@@ -2,6 +2,7 @@ import { create } from "zustand";
 import axios from "../lib/axios";
 import { FormdataType } from "@/app/(auth)/signup/page";
 import { DataType } from "@/app/(auth)/login/page";
+import { toast } from "react-toastify";
 
 type UserType = {
   id: string;
@@ -27,7 +28,19 @@ const useAuthStore = create<AuthStoreType>((set) => ({
   //check auth
   authUser: null,
   isCheckingAuth: true,
-  checkAuth: async () => {},
+  checkAuth: async () => {
+    set({ isCheckingAuth: false });
+    try {
+      const res = await axios.get("/api/auth/check");
+      set({ authUser: res.data });
+    } catch (error: any) {
+      console.error("Error: ", error.response);
+      set({ authUser: null });
+      throw error;
+    } finally {
+      set({ isCheckingAuth: false });
+    }
+  },
 
   //signup
   isSigningUp: false,
@@ -36,8 +49,12 @@ const useAuthStore = create<AuthStoreType>((set) => ({
     try {
       const res = await axios.post("/api/auth/signup", data);
       set({ authUser: res.data?.data });
+      toast.success(res.data?.message);
+      return res.data?.success;
     } catch (error: any) {
-      console.error("Error in signup:", error.response);
+      toast.error(error.response?.data?.message);
+      console.error("Error in signup: ", error.response?.data?.message);
+      throw error;
     } finally {
       set({ isSigningUp: false });
     }
@@ -50,8 +67,12 @@ const useAuthStore = create<AuthStoreType>((set) => ({
     try {
       const res = await axios.post("/api/auth/login", data);
       set({ authUser: res.data?.data });
+      toast.success(res.data?.message);
+      return res.data?.success;
     } catch (error: any) {
-      console.error("Error in login", error.response);
+      toast.error(error.response?.data?.message);
+      console.error("Error in login: ", error.response?.data?.message);
+      throw error;
     } finally {
       set({ isLoggingIn: false });
     }

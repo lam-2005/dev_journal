@@ -1,6 +1,8 @@
+"use client";
+import useAuthStore from "@/store/useAuthStore";
 import Link from "next/link";
-import React from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { FiChevronDown } from "react-icons/fi";
 
 type LinkType = { name: string; href: string }[];
 
@@ -23,6 +25,8 @@ const links: LinkType = [
   },
 ];
 const Navbar = () => {
+  const { authUser } = useAuthStore();
+
   return (
     <div className="flex items-center py-8 bg-secondary-background ">
       <div className="container">
@@ -41,11 +45,20 @@ const Navbar = () => {
               <Link href={l.href}>{l.name}</Link>
             </li>
           ))}
-          <li className="px-2.5 ">
-            <Link href="/login" className="flex items-center gap-2">
-              <FaUserCircle className="text-2xl" /> Log In
-            </Link>
-          </li>
+          {authUser ? (
+            <li className="px-2.5 ">
+              <Link href="#" className="flex items-center gap-1">
+                <FaUserCircle className="text-3xl" />
+                <FiChevronDown className="text-2xl" />
+              </Link>
+            </li>
+          ) : (
+            <li className="px-2.5 ">
+              <Link href="/login" className="flex items-center gap-2">
+                <FaUserCircle className="text-2xl" /> Log In
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
     </div>

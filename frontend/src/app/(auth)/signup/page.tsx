@@ -1,6 +1,8 @@
 "use client";
 
 import useAuthStore from "@/store/useAuthStore";
+import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 export type FormdataType = {
@@ -11,7 +13,9 @@ export type FormdataType = {
 };
 
 const SignUpPage = () => {
-  const { signup, authUser } = useAuthStore();
+  const router = useRouter();
+
+  const { signup, isSigningUp } = useAuthStore();
 
   const [formdata, setFormdata] = useState<FormdataType>({
     name: "",
@@ -26,8 +30,13 @@ const SignUpPage = () => {
   };
 
   const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    await signup(formdata);
+    try {
+      e.preventDefault();
+      await signup(formdata);
+      router.push("/");
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
@@ -82,7 +91,7 @@ const SignUpPage = () => {
               Confirm password *
             </label>
             <input
-              type="text"
+              type="password"
               name="confirmPassword"
               id="confirmPassword"
               value={formdata.confirmPassword}
@@ -90,14 +99,19 @@ const SignUpPage = () => {
               className="hover:bg-secondary-background focus:bg-secondary-background bg-[#E0E0E0] border-0 outline-none px-4 py-2 w-full"
             />
           </div>
-          <button className="font-mono bg-primary w-full p-3 font-bold mt-4">
-            Create an account
+          <button
+            className="font-mono bg-primary w-full p-3 font-bold mt-4 hover:brightness-75 cursor-pointer disabled:brightness-75"
+            disabled={isSigningUp}
+          >
+            {isSigningUp ? "Please wait..." : "Create an account"}
           </button>
         </form>
       </div>
       <div className="font-mono text-sm text-center mt-8">
         Already have an account?{" "}
-        <span className="underline font-bold">Sign In</span>
+        <Link href="/login" className="underline font-bold hover:text-primary">
+          Sign In
+        </Link>
       </div>
     </div>
   );
