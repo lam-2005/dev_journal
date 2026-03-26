@@ -3,10 +3,13 @@ import env from "./config/env.js";
 import AuthRoute from "./routes/auth.route.js";
 import pool from "./lib/pool.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
 const app = express();
 
 app.use(cors({ origin: env.URL_CLIENT, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth", AuthRoute);
 

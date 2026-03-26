@@ -53,6 +53,7 @@ const AuthService = {
         avatar: user.avatar,
         background: user.background,
         introduction: user.introduction,
+        create_at: user.create_at,
       };
     } catch (error) {
       throw error;
