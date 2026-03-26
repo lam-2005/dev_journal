@@ -1,7 +1,7 @@
 "use client";
 import useAuthStore from "@/store/useAuthStore";
 import React, { FormEvent, useState } from "react";
-type DataType = {
+export type DataType = {
   email: string;
   password: string;
 };
@@ -20,9 +20,9 @@ const LoginPage = () => {
     });
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    login(formdata);
+    await login(formdata);
   };
 
   return (
