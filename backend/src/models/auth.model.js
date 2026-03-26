@@ -7,12 +7,18 @@ const AuthModel = {
     return rows[0];
   },
 
+  findById: async (userId) => {
+    const query =
+      "select id, name, email, avatar, background, introduction, create_at,update_at from users where id = $1";
+    const { rows } = await pool.query(query, [userId]);
+    return rows[0];
+  },
   create: async (data) => {
     const { name, email, password } = data;
 
     const query = `
             insert into users (name, email, password) values ($1,$2,$3)
-            returning id, email, name, create_at;
+            returning id, email, name,avatar, background, introduction, create_at;
         `;
     const values = [name, email, password];
     const { rows } = await pool.query(query, values);
