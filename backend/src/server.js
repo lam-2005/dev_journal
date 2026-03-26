@@ -2,8 +2,10 @@ import express from "express";
 import env from "./config/env.js";
 import AuthRoute from "./routes/auth.route.js";
 import pool from "./lib/pool.js";
+import cors from "cors";
 const app = express();
 
+app.use(cors({ origin: env.URL_CLIENT, credentials: true }));
 app.use(express.json());
 
 app.use("/api/auth", AuthRoute);

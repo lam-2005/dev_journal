@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 
@@ -37,11 +38,13 @@ const Navbar = () => {
               className="px-2.5 hover:text-primary transition duration-300"
               key={l.name}
             >
-              <a href={l.href}>{l.name}</a>
+              <Link href={l.href}>{l.name}</Link>
             </li>
           ))}
-          <li className="px-2.5 flex items-center gap-2">
-            <FaUserCircle className="text-2xl" /> Log In
+          <li className="px-2.5 ">
+            <Link href="/login" className="flex items-center gap-2">
+              <FaUserCircle className="text-2xl" /> Log In
+            </Link>
           </li>
         </ul>
       </nav>
