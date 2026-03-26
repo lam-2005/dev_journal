@@ -18,7 +18,7 @@ const AuthModel = {
 
     const query = `
             insert into users (name, email, password) values ($1,$2,$3)
-            returning id, email, name,avatar, background, introduction, create_at;
+            returning id, email, name,avatar, background, introduction, create_at,update_at;
         `;
     const values = [name, email, password];
     const { rows } = await pool.query(query, values);

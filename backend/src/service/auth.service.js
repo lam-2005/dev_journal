@@ -54,6 +54,7 @@ const AuthService = {
         background: user.background,
         introduction: user.introduction,
         create_at: user.create_at,
+        update_at: user.update_at,
       };
     } catch (error) {
       throw error;

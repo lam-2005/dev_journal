@@ -1,12 +1,16 @@
 "use client";
 import useAuthStore from "@/store/useAuthStore";
+import Link from "next/link";
+import { useRouter } from "nextjs-toploader/app";
 import React, { FormEvent, useState } from "react";
 export type DataType = {
   email: string;
   password: string;
 };
 const LoginPage = () => {
-  const { login } = useAuthStore();
+  const router = useRouter();
+
+  const { login, isLoggingIn } = useAuthStore();
 
   const [formdata, setFormdata] = useState<DataType>({
     email: "",
@@ -21,8 +25,13 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    await login(formdata);
+    try {
+      e.preventDefault();
+      await login(formdata);
+      router.push("/");
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
@@ -60,17 +69,25 @@ const LoginPage = () => {
               onChange={onChange}
             />
           </div>
-          <div className="font-mono text-sm underline text-end font-bold">
+          <div className="font-mono text-sm underline text-end font-bold hover:text-primary">
             Forgot Password?
           </div>
-          <button className="font-mono bg-primary w-full p-3 font-bold mt-4">
-            Sign In
+          <button
+            className="font-mono bg-primary w-full p-3 font-bold mt-4 hover:brightness-75 cursor-pointer disabled:brightness-75"
+            disabled={isLoggingIn}
+          >
+            {isLoggingIn ? "Please wait..." : "Sign In"}
           </button>
         </form>
       </div>
       <div className="font-mono text-sm text-center mt-8">
         Don&apos;t have an account?{" "}
-        <span className="underline font-bold">Create an account</span>
+        <Link
+          href={"/signup"}
+          className="underline font-bold hover:text-primary"
+        >
+          Create an account
+        </Link>
       </div>
     </div>
   );
