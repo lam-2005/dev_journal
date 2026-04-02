@@ -1,6 +1,7 @@
 import express from "express";
 import env from "./config/env.js";
 import AuthRoute from "./routes/auth.route.js";
+import PostRoute from "./routes/post.route.js";
 import pool from "./lib/pool.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -8,10 +9,11 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors({ origin: env.URL_CLIENT, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 app.use("/api/auth", AuthRoute);
+app.use("/api/blog", PostRoute);
 
 async function startServer() {
   try {
