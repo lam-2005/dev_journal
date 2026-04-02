@@ -5,6 +5,7 @@ import JoditEditor from "jodit-react";
 import { useMemo, useRef, useState } from "react";
 import { DataSettingPost } from "./SettingPost";
 import { toast } from "react-toastify";
+import { ThreeDot } from "react-loading-indicators";
 
 const TextEditor = ({
   dataSettingPost,
@@ -36,13 +37,31 @@ const TextEditor = ({
       setTitle("");
       setContent("");
       toast.success("Post created successfully!");
-    } catch (error) {
-      console.error("Error creating post:", error);
-      toast.error("Failed to create post.");
+    } catch (error: any) {
+      console.error("Error creating post:", error.response?.data?.message);
+      toast.error(
+        "The post was not accepted. Please check the title and content and try again.",
+      );
+      toast.warning(
+        error.response?.data?.result?.reason || error.response?.data?.message,
+        {
+          autoClose: 22000,
+        },
+      );
     }
   };
+
   return (
     <>
+      {" "}
+      {isCreatingPost && (
+        <div className="top-0 left-0 bg-black/20 z-102 fixed w-screen h-screen flex flex-col gap-4 items-center justify-center">
+          <ThreeDot color="#fff" size="medium" text="" textColor="" />
+          <p className="text-lg text-background">
+            Your post is being reviewed, please wait a moment...
+          </p>
+        </div>
+      )}
       <div className="w-full bg-secondary-background">
         <input
           type="text"
@@ -64,7 +83,6 @@ const TextEditor = ({
           className="font-mono"
         />
       </div>
-
       <div className=" flex justify-end items-center gap-5">
         <button className="border border-foreground font-mono px-4 py-2 text-sm cursor-pointer">
           Cancel
