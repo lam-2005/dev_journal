@@ -18,6 +18,16 @@ const PostModel = {
     ]);
     return result.rows[0];
   },
+  getAll: async () => {
+    const result = await pool.query("SELECT * FROM blogs");
+    return result.rows[0];
+  },
+  getAllByUserId: async (user_id) => {
+    const result = await pool.query("SELECT * FROM blogs WHERE user_id = $1", [
+      user_id,
+    ]);
+    return result.rows[0];
+  },
 };
 
 export default PostModel;
