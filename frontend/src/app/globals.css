@@ -32,6 +32,9 @@
   .container {
     @apply px-20 mx-auto text-foreground;
   }
+  .jodit-placeholder {
+    @apply font-mono;
+  }
 }
 @layer utilities {
 }

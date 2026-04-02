@@ -9,11 +9,11 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors({ origin: env.URL_CLIENT, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 app.use("/api/auth", AuthRoute);
-app.use("/api/post", PostRoute);
+app.use("/api/blog", PostRoute);
 
 async function startServer() {
   try {

@@ -8,8 +8,7 @@ const PostService = {
     let slug = convert(data.title);
     let content = data.content;
 
-    const base64Regex =
-      /<img [^>]*src="data:image\/[^;]+;base64,([^">]+)"[^>]*>/g;
+    const base64Regex = /src="(data:image\/[^;]+;base64,[^">]+)"/g;
     const matches = [...content.matchAll(base64Regex)];
 
     if (matches.length > 0) {
