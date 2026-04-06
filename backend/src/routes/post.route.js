@@ -12,4 +12,5 @@ router.get("/get", (_, res) =>
 router.get("/get/:user_id", PostController.getAllByUserId);
 router.get("/post/:slug", PostController.getBySlug);
 
+router.delete("/delete/:id", protectedRoute, PostController.delete);
 export default router;

@@ -90,6 +90,8 @@ const PostService = {
   },
   delete: async (id) => {
     try {
+      if (!id) throw new Error("Id Post is required");
+
       const deletedPost = await PostModel.delete(id);
       return deletedPost;
     } catch (error) {
