@@ -22,6 +22,9 @@ type BlogStoreType = {
   postsByUserId: PostType[];
   isGettingAllPostsByUserId: boolean;
   getAllPostsByUserId: (id: string) => Promise<void>;
+
+  isDeletingPost: boolean;
+  deletePost: (id: string) => Promise<void>;
 };
 
 const useBlogStore = create<BlogStoreType>((set) => {
@@ -113,6 +116,28 @@ const useBlogStore = create<BlogStoreType>((set) => {
         throw error;
       } finally {
         set({ isGettingAllPostsByUserId: false });
+      }
+    },
+
+    isDeletingPost: false,
+    deletePost: async (id: string) => {
+      set({ isDeletingPost: true });
+      try {
+        const res = await axios.delete(`/api/blog/delete/${id}`);
+        set((state) => ({
+          posts: state.posts.filter((post) => post.id !== id),
+          postsRecent: state.postsRecent.filter((post) => post.id !== id),
+          postsByUserId: state.postsByUserId.filter((post) => post.id !== id),
+          postBySlug: state.postBySlug?.id === id ? null : state.postBySlug,
+        }));
+
+        toast.success("Post deleted successfully!");
+        return res.data;
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "Error getting posts");
+        throw error;
+      } finally {
+        set({ isDeletingPost: false });
       }
     },
   };

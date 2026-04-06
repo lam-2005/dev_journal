@@ -4,7 +4,6 @@ import useBlogStore from "@/store/useBlogStore";
 import JoditEditor from "jodit-react";
 import { useMemo, useRef, useState } from "react";
 import { DataSettingPost } from "./SettingPost";
-import { toast } from "react-toastify";
 import { ThreeDot } from "react-loading-indicators";
 
 const TextEditor = ({

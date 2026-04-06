@@ -6,7 +6,8 @@ const PostController = {
     try {
       const data = req.body;
       const user_id = req.user.id;
-      if (!user_id) throw new Error("User ID is required");
+      if (!user_id)
+        return res.status(400).json({ message: "User ID is required" });
       data.user_id = user_id;
       let moderation = { valid: true };
       try {
@@ -79,7 +80,8 @@ const PostController = {
   getAllByUserId: async (req, res) => {
     try {
       const user_id = req.params.user_id;
-      if (!user_id) res.status(400).json({ message: "User ID is required" });
+      if (!user_id)
+        return res.status(400).json({ message: "User ID is required" });
       const posts = await PostService.getAllByUserId(user_id);
       return res.status(200).json({
         success: true,
@@ -98,14 +100,31 @@ const PostController = {
   getBySlug: async (req, res) => {
     try {
       const slug = req.params.slug;
-      if (!slug) res.status(400).json({ message: "Slug is required" });
+      if (!slug) return res.status(400).json({ message: "Slug is required" });
       const post = await PostService.getBySlug(slug);
-      console.log(post);
 
       return res.status(200).json({
         success: true,
         message: "Get post successfully",
         data: post,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+  delete: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const postDeleted = await PostService.delete(id);
+      return res.status(200).json({
+        success: true,
+        message: "Delete post successfully",
+        data: postDeleted,
       });
     } catch (error) {
       console.error("Error in PostController: ", error);
