@@ -4,9 +4,12 @@ import protectedRoute from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.post("/create", protectedRoute, PostController.create);
-// router.post("/login", AuthController.login);
-// router.post("/logout", AuthController.logout);
-// router.get("/check", protectedRoute, (req, res) => {
-//   res.status(200).json(req.user);
-// });
+router.get("/get-all", PostController.getAll);
+router.get("/get-recent", PostController.getRecentPosts);
+router.get("/get", (_, res) =>
+  res.status(400).json({ message: "Vui lòng cung cấp User ID" }),
+);
+router.get("/get/:user_id", PostController.getAllByUserId);
+router.get("/post/:slug", PostController.getBySlug);
+
 export default router;

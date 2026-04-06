@@ -19,6 +19,7 @@ const moderateContentPrompt = (title, content) => {
     - Đề xuất cách chỉnh sửa để nội dung trở nên an toàn hơn (nếu có)
     - Chỉ cần trả về kết quả dưới dạng JSON: {"valid": boolean, "reason": "lý do nếu vi phạm (tiếng Anh)"} không cần giải thích thêm
     - Hãy kiểm tra ${title} và ${content} một cách cẩn thận nếu 1 trong 2 phần có vấn đề thì sẽ đánh giá là vi phạm (Ví dụ: Nếu tiêu đề có nội dụng liên quan đến lập trình nhưng nội dung lại không liên quan hoặc có nội dung nhạy cảm thì sẽ đánh giá là vi phạm)
+    - Trong quá trình kiểm duyệt, nếu có dữ liệu là ảnh dạng base64 thì bỏ qua 
 
     Nguyên tắc:
     - Ưu tiên độ chính xác hơn độ bao phủ

@@ -33,9 +33,86 @@ const PostController = {
       });
     } catch (error) {
       console.error("Error in PostController: ", error);
-      return res.status(400).json({
+      return res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+  getAll: async (_, res) => {
+    try {
+      const posts = await PostService.getAll();
+      return res.status(200).json({
+        success: true,
+        message: "Posts retrieved successfully",
+        data: posts,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+
+  getRecentPosts: async (_, res) => {
+    try {
+      const posts = await PostService.getRecentPosts();
+      return res.status(200).json({
+        success: true,
+        message: "Posts retrieved successfully",
+        data: posts,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+
+  getAllByUserId: async (req, res) => {
+    try {
+      const user_id = req.params.user_id;
+      if (!user_id) res.status(400).json({ message: "User ID is required" });
+      const posts = await PostService.getAllByUserId(user_id);
+      return res.status(200).json({
+        success: true,
+        message: "Posts retrieved successfully",
+        data: posts,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+  getBySlug: async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      if (!slug) res.status(400).json({ message: "Slug is required" });
+      const post = await PostService.getBySlug(slug);
+      console.log(post);
+
+      return res.status(200).json({
+        success: true,
+        message: "Get post successfully",
+        data: post,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
       });
     }
   },

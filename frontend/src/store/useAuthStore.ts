@@ -3,15 +3,7 @@ import axios from "../lib/axios";
 import { FormdataType } from "@/app/(auth)/signup/page";
 import { DataType } from "@/app/(auth)/login/page";
 import { toast } from "react-toastify";
-
-type UserType = {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  background?: string;
-  introduction?: string;
-};
+import { UserType } from "@/interfaces/auth.interface";
 
 type AuthStoreType = {
   authUser: UserType | null;
@@ -22,7 +14,14 @@ type AuthStoreType = {
   checkAuth: () => Promise<void>;
   signup: (data: FormdataType) => Promise<void>;
   login: (data: DataType) => Promise<void>;
+  logout: () => Promise<void>;
+
+  userById: UserType | null;
+  isGettingUserById: boolean;
+  getUserById: (id: string) => Promise<void>;
 };
+
+const privateRoute = ["/create-post", "/my-posts"];
 
 const useAuthStore = create<AuthStoreType>((set) => ({
   //check auth
@@ -75,6 +74,41 @@ const useAuthStore = create<AuthStoreType>((set) => ({
       throw error;
     } finally {
       set({ isLoggingIn: false });
+    }
+  },
+
+  logout: async () => {
+    try {
+      await axios.post("api/auth/logout");
+      set({ authUser: null });
+      toast.success("Logged out successfully!");
+      const currentPath = window.location.pathname;
+      const isPrivateRoute = privateRoute.some((route: string) =>
+        currentPath.startsWith(route),
+      );
+      if (isPrivateRoute) {
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error("Error logging out");
+      console.error("Error in logout", error);
+    }
+  },
+  userById: null,
+  isGettingUserById: false,
+  getUserById: async (id: string) => {
+    if (!id) return;
+    set({ isGettingUserById: true, userById: null });
+    try {
+      const res = await axios.get(`/api/auth/${id}`);
+
+      set({ userById: res.data?.data });
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "Error getting user");
+      set({ userById: null });
+      throw error;
+    } finally {
+      set({ isGettingUserById: false });
     }
   },
 }));

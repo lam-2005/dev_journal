@@ -16,9 +16,10 @@ const AuthController = {
       });
     } catch (error) {
       console.error("Error in Authcontroller: ", error);
-      return res.status(400).json({
+      return res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Internal Server Error",
+        error: error.message,
       });
     }
   },
@@ -37,9 +38,10 @@ const AuthController = {
       });
     } catch (error) {
       console.error("Error in Authcontroller: ", error);
-      return res.status(400).json({
+      return res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Internal Server Error",
+        error: error.message,
       });
     }
   },
@@ -53,9 +55,30 @@ const AuthController = {
       });
     } catch (error) {
       console.error("Error in Authcontroller: ", error);
-      return res.status(400).json({
+      return res.status(500).json({
         success: false,
-        message: error.message,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+  getById: async (req, res) => {
+    try {
+      const user_id = req.params.user_id;
+      if (!user_id) res.status(400).json({ message: "User id is required" });
+      const user = await AuthService.getById(user_id);
+
+      return res.status(200).json({
+        success: true,
+        message: "Get post successfully",
+        data: user,
+      });
+    } catch (error) {
+      console.error("Error in AuthController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
       });
     }
   },

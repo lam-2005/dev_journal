@@ -31,24 +31,10 @@ const TextEditor = ({
   }, []);
 
   const onSubmit = async () => {
-    try {
-      await createPost({ title, content, ...dataSettingPost });
-      setDataSettingPost({ excerpt: "", image: null });
-      setTitle("");
-      setContent("");
-      toast.success("Post created successfully!");
-    } catch (error: any) {
-      console.error("Error creating post:", error.response?.data?.message);
-      toast.error(
-        "The post was not accepted. Please check the title and content and try again.",
-      );
-      toast.warning(
-        error.response?.data?.result?.reason || error.response?.data?.message,
-        {
-          autoClose: 22000,
-        },
-      );
-    }
+    await createPost({ title, content, ...dataSettingPost });
+    setDataSettingPost({ excerpt: "", image: null });
+    setTitle("");
+    setContent("");
   };
 
   return (

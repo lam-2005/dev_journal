@@ -1,12 +1,14 @@
 "use client";
 import SettingPost, { DataSettingPost } from "@/components/SettingPost";
 import TextEditor from "@/components/TextEditor";
+import useAuthStore from "@/store/useAuthStore";
 import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 
 const CreatePost = () => {
   const [openSetting, setOpenSetting] = useState(false);
+  const { authUser } = useAuthStore();
   const [dataSettingPost, setDataSettingPost] = useState<DataSettingPost>({
     excerpt: "",
     image: null,
@@ -20,7 +22,7 @@ const CreatePost = () => {
       <div>
         <div className="flex items-center justify-between ">
           <div className="flex items-center gap-2">
-            <FaUserCircle className="text-3xl" /> Author 1
+            <FaUserCircle className="text-3xl" /> {authUser?.name}
           </div>
           <div
             className="font-mono text-sm flex items-center gap-2 cursor-pointer"

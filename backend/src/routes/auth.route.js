@@ -9,4 +9,5 @@ router.post("/logout", AuthController.logout);
 router.get("/check", protectedRoute, (req, res) => {
   res.status(200).json(req.user);
 });
+router.get("/:user_id", AuthController.getById);
 export default router;

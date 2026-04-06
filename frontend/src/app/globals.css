@@ -35,6 +35,15 @@
   .jodit-placeholder {
     @apply font-mono;
   }
+  .jodit-wysiwyg ul {
+    list-style: disc !important;
+    padding-left: 40px !important;
+  }
+
+  .jodit-wysiwyg ol {
+    list-style: decimal !important;
+    padding-left: 40px !important;
+  }
 }
 @layer utilities {
 }

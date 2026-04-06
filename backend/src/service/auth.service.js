@@ -60,6 +60,17 @@ const AuthService = {
       throw error;
     }
   },
+  getById: async (id) => {
+    try {
+      const user = await AuthModel.findById(id);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default AuthService;
