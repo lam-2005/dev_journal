@@ -11,8 +11,10 @@ import { IoTrashOutline } from "react-icons/io5";
 import useBlogStore from "@/store/useBlogStore";
 import { ThreeDot } from "react-loading-indicators";
 import { toast } from "react-toastify";
+import { useRouter } from "nextjs-toploader/app";
 
 const MyPost = ({ post }: { post: PostType }) => {
+  const router = useRouter();
   const { isDeletingPost, deletePost } = useBlogStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
@@ -88,7 +90,7 @@ const MyPost = ({ post }: { post: PostType }) => {
       )}
       <div className=" w-full border border-foreground/10">
         {post.image && (
-          <div className="w-full h-102.75">
+          <div className="block w-full h-102.75">
             <Image
               src={post.image}
               alt={post.slug || post.title}
@@ -103,13 +105,13 @@ const MyPost = ({ post }: { post: PostType }) => {
             <p>{convertDate(post.create_at ?? "")}</p>
 
             <div className="relative z-150" ref={optionRef}>
-              <button onClick={handleOpenOption}>
+              <button onClick={handleOpenOption} className="cursor-pointer">
                 <SlOptionsVertical className="text-sm" />
               </button>
               {isOpen && (
                 <div className="p-2 w-75 absolute bg-background shadow-xl right-3 top-5 z-150">
-                  <ul className="text-sm font-mono [&_li]:flex [&_li]:items-center [&_li]:gap-2 [&_li]:px-5 [&_li]:py-2.5 [&_li]:hover:bg-foreground/20">
-                    <li>
+                  <ul className="text-sm font-mono [&_li]:cursor-pointer [&_li]:flex [&_li]:items-center [&_li]:gap-2 [&_li]:px-5 [&_li]:py-2.5 [&_li]:hover:bg-foreground/20">
+                    <li onClick={() => router.push(`/edit-post/${post.id}`)}>
                       <LuPencil /> Edit post
                     </li>
                     <div className="h-px w-full bg-foreground/20 my-2" />

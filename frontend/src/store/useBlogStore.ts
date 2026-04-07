@@ -19,12 +19,19 @@ type BlogStoreType = {
   isGettingPostBySlug: boolean;
   getPostBySlug: (slug: string) => Promise<void>;
 
+  postById: PostType | null;
+  isGettingPostById: boolean;
+  getPostById: (id: string) => Promise<void>;
+
   postsByUserId: PostType[];
   isGettingAllPostsByUserId: boolean;
   getAllPostsByUserId: (id: string) => Promise<void>;
 
   isDeletingPost: boolean;
   deletePost: (id: string) => Promise<void>;
+
+  isUpdatingPost: boolean;
+  updatePost: ({ id, data }: { id: string; data: PostType }) => Promise<void>;
 };
 
 const useBlogStore = create<BlogStoreType>((set) => {
@@ -103,6 +110,23 @@ const useBlogStore = create<BlogStoreType>((set) => {
       }
     },
 
+    postById: null,
+    isGettingPostById: false,
+    getPostById: async (id: string) => {
+      set({ isGettingPostById: true, postById: null });
+      try {
+        const res = await axios.get(`/api/blog/post/id/${id}`);
+
+        set({ postById: res.data?.data || null });
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "Error getting posts");
+        set({ postById: null });
+        throw error;
+      } finally {
+        set({ isGettingPostById: false });
+      }
+    },
+
     postsByUserId: [],
     isGettingAllPostsByUserId: false,
     getAllPostsByUserId: async (id: string) => {
@@ -138,6 +162,30 @@ const useBlogStore = create<BlogStoreType>((set) => {
         throw error;
       } finally {
         set({ isDeletingPost: false });
+      }
+    },
+
+    isUpdatingPost: false,
+    updatePost: async ({ id, data }: { id: string; data: PostType }) => {
+      set({ isUpdatingPost: true });
+      try {
+        const res = await axios.put(`/api/blog/update/${id}`, data);
+        toast.success("Post updated successfully!");
+        return res.data;
+      } catch (error: any) {
+        console.error("Error updating post:", error.response?.data?.message);
+        toast.error(
+          "The post was not accepted. Please check the title and content and try again.",
+        );
+        toast.warning(
+          error.response?.data?.result?.reason || error.response?.data?.message,
+          {
+            autoClose: 22000,
+          },
+        );
+        throw error;
+      } finally {
+        set({ isUpdatingPost: false });
       }
     },
   };

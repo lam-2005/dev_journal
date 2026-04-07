@@ -10,7 +10,7 @@ const moderateContent = async (title, content) => {
   const prompt = moderateContentPrompt(title, content);
   try {
     const response = await genAI.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.5-flash-lite",
       contents: prompt,
       config: {
         responseMimeType: "application/json",

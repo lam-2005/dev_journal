@@ -28,7 +28,7 @@ const PostRecomented = ({ post }: { post: PostType }) => {
               <span>{estimateReadingTime(post.content)} min read</span>
             </div>
 
-            <div className="flex-1 hover:text-primary cursor-pointer flex items-end text-foreground">
+            <div className="flex-1 hover:text-primary cursor-pointer flex items-end text-background">
               <h3 className="line-clamp-3 font-extrabold font-sans text-2xl mb-5  ">
                 {post.title}
               </h3>

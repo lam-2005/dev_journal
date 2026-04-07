@@ -43,7 +43,7 @@ const PostModel = {
     const { title, content, slug, excerpt, image } = data;
     const values = [title, content, slug, excerpt, image, id];
     const query =
-      "UPDATE blogs SET title = $1, content = $2, slug = $3, excerpt = $4, image = $5 WHERE id = $6 RETURNING *";
+      "UPDATE blogs SET title = $1, content = $2, slug = $3, excerpt = $4, image = $5, update_at = NOW() WHERE id = $6 RETURNING *";
     const result = await pool.query(query, values);
     return result.rows[0];
   },
@@ -53,6 +53,10 @@ const PostModel = {
       "SELECT * FROM blogs ORDER BY create_at DESC LIMIT 3",
     );
     return result.rows;
+  },
+  getById: async (id) => {
+    const result = await pool.query("select * from blogs where id = $1", [id]);
+    return result.rows[0];
   },
 };
 

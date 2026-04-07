@@ -13,15 +13,20 @@ const PostController = {
       try {
         moderation = await moderateContent(data.title, data.content);
       } catch (error) {
+        console.error(
+          "AI Moderation Error Details:",
+          error.response?.data || error.message,
+        );
         return res.status(503).json({
           message:
             "Sorry! Cannot moderate content at the moment, please try again later",
+          error,
         });
       }
       if (!moderation.valid) {
         console.log(moderation);
         return res.status(400).json({
-          message: "Bài viết không được chấp nhận",
+          message: "The post was not accepted.",
           result: moderation,
         });
       }
@@ -117,6 +122,28 @@ const PostController = {
       });
     }
   },
+  getById: async (req, res) => {
+    try {
+      const id_post = req.params.id_post;
+      if (!id_post)
+        return res.status(400).json({ message: "Id post is required" });
+      const post = await PostService.getById(id_post);
+
+      return res.status(200).json({
+        success: true,
+        message: "Get post successfully",
+        data: post,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+
   delete: async (req, res) => {
     try {
       const { id } = req.params;
@@ -128,6 +155,48 @@ const PostController = {
       });
     } catch (error) {
       console.error("Error in PostController: ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
+  update: async (req, res) => {
+    try {
+      const data = req.body;
+      const id_post = req.params.id_post;
+
+      const user_id = req.user.id;
+
+      let moderation = { valid: true };
+      try {
+        moderation = await moderateContent(data.title, data.content);
+      } catch (error) {
+        return res.status(503).json({
+          message:
+            "Sorry! Cannot moderate content at the moment, please try again later",
+        });
+      }
+      if (!moderation.valid) {
+        console.log(moderation);
+        return res.status(400).json({
+          message: "The post was not accepted.",
+          result: moderation,
+        });
+      }
+
+      const updatedPost = await PostService.update(id_post, data, user_id);
+      return res.status(200).json({
+        success: true,
+        message: "Post updated successfully",
+        data: updatedPost,
+      });
+    } catch (error) {
+      console.error("Error in PostController: ", error);
+      if (error.message === "You are not authorized to edit this post!") {
+        return res.status(403).json({ success: false, message: error.message });
+      }
       return res.status(500).json({
         success: false,
         message: "Internal Server Error",
