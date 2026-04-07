@@ -88,9 +88,11 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
         ) : postsRecent && postsRecent.length > 0 ? (
           <>
             <div className="grid grid-cols-3 gap-8 justify-center mt-10">
-              {postsRecent.map((post) => (
-                <PostRecomented key={post.id} post={post} />
-              ))}
+              {postsRecent
+                .filter((post) => post.slug !== slug)
+                .map((post) => (
+                  <PostRecomented key={post.id} post={post} />
+                ))}
             </div>
           </>
         ) : (

@@ -98,11 +98,26 @@ const PostService = {
       throw error;
     }
   },
-  update: async (id, data) => {
+  update: async (id, data, user_id) => {
+    const existingPost = await PostModel.getById(id);
+    if (!existingPost) throw new Error("Post not found");
+    if (existingPost.user_id !== user_id)
+      throw new Error("You are not authorized to edit this post!");
+
     if (!data.title) throw new Error("Title is required");
     if (!data.content) throw new Error("Content is required");
-    let slug = convert(data.title);
+
     let content = data.content;
+    let slug = existingPost.slug;
+
+    if (data.title !== existingPost.title) {
+      slug = convert(data.title);
+      const checkSlug = await PostModel.findBySlug(slug);
+
+      if (checkSlug && checkSlug.id !== id) {
+        slug = `${slug}-${Math.floor(Math.random() * 10000)}`;
+      }
+    }
 
     const base64Regex = /src="(data:image\/[^;]+;base64,[^">]+)"/g;
     const matches = [...content.matchAll(base64Regex)];
@@ -111,45 +126,36 @@ const PostService = {
       const uploadPromises = matches.map((match) =>
         cloudinary.uploader.upload(match[1], { folder: "blog_content" }),
       );
-
       const uploadResults = await Promise.all(uploadPromises);
       matches.forEach((match, index) => {
         content = content.replace(match[1], uploadResults[index].secure_url);
       });
     }
 
-    let imageUrl = data.image;
+    let imageUrl = data.image || existingPost.image;
     if (data.image && data.image.startsWith("data:image")) {
       const uploadRes = await cloudinary.uploader.upload(data.image, {
         folder: "blog_thumbnails",
       });
       imageUrl = uploadRes.secure_url;
-    } else if (!imageUrl) {
-      const imgRegex = /<img[^>]+src="([^">]+)"/i;
-      const firstImgMatch = content.match(imgRegex);
-      if (firstImgMatch) {
-        imageUrl = firstImgMatch[1];
-      }
     }
 
-    const checkSlug = await PostModel.findBySlug(slug);
-    if (checkSlug) slug = `${slug}-${Math.floor(Math.random() * 10000)}`;
-
     const autoExcerpt =
-      data.content
+      content
         .replace(/<[^>]*>/g, "")
         .substring(0, 150)
         .trim() + "...";
 
     try {
-      const newPost = await PostModel.create({
+      const updatedPost = await PostModel.update(id, {
         ...data,
         slug,
         excerpt: data.excerpt || autoExcerpt,
         image: imageUrl,
         content,
       });
-      return newPost;
+
+      return updatedPost;
     } catch (error) {
       throw error;
     }
@@ -157,6 +163,17 @@ const PostService = {
   getBySlug: async (slug) => {
     try {
       const post = await PostModel.findBySlug(slug);
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      return post;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getById: async (id) => {
+    try {
+      const post = await PostModel.getById(id);
       if (!post) {
         throw new Error("Post not found");
       }

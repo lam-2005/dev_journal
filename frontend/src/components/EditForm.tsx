@@ -5,22 +5,23 @@ import JoditEditor from "jodit-react";
 import { useMemo, useRef, useState } from "react";
 import { DataSettingPost } from "./SettingPost";
 import { ThreeDot } from "react-loading-indicators";
+import { PostType } from "@/interfaces/post.interface";
 import { useRouter } from "nextjs-toploader/app";
 
 const TextEditor = ({
   dataSettingPost,
   setDataSettingPost,
+  dataPost,
 }: {
   dataSettingPost: DataSettingPost;
   setDataSettingPost: (data: DataSettingPost) => void;
+  dataPost: PostType;
 }) => {
   const router = useRouter();
-
-  const { createPost, isCreatingPost } = useBlogStore();
-
+  const { updatePost, isUpdatingPost } = useBlogStore();
   const editorRef = useRef<any>(null);
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
+  const [content, setContent] = useState(dataPost.content || "");
+  const [title, setTitle] = useState(dataPost.title || "");
   const config = useMemo(() => {
     return {
       placeholder: "Write something great...",
@@ -33,17 +34,20 @@ const TextEditor = ({
   }, []);
 
   const onSubmit = async () => {
-    const res: any = await createPost({ title, content, ...dataSettingPost });
+    const res: any = await updatePost({
+      id: dataPost.id || "",
+      data: { title, content, ...dataSettingPost },
+    });
     setDataSettingPost({ excerpt: "", image: null });
     setTitle("");
     setContent("");
-    router.push(`/blog/${res?.data.slug || ""}`);
+    router.push(`/blog/${res.data.slug || ""}`);
   };
 
   return (
     <>
       {" "}
-      {isCreatingPost && (
+      {isUpdatingPost && (
         <div className="top-0 left-0 bg-black/20 z-102 fixed w-screen h-screen flex flex-col gap-4 items-center justify-center">
           <ThreeDot color="#fff" size="medium" text="" textColor="" />
           <p className="text-lg text-background">
@@ -82,9 +86,9 @@ const TextEditor = ({
         <button
           className="bg-primary px-6 py-2 text-sm font-bold hover:brightness-75 font-mono border border-foreground cursor-pointer disabled:cursor-not-allowed disabled:brightness-75"
           onClick={onSubmit}
-          disabled={isCreatingPost}
+          disabled={isUpdatingPost}
         >
-          {isCreatingPost ? "Publishing..." : "Publish"}
+          {isUpdatingPost ? "Updating..." : "Update"}
         </button>
       </div>
     </>

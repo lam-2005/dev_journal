@@ -1,4 +1,5 @@
 "use client";
+import LoadingSkeletonPost from "@/components/LoadingSkeletonPost";
 import MyPost from "@/components/MyPost";
 import NoPost from "@/components/NoPost";
 import useAuthStore from "@/store/useAuthStore";
@@ -23,15 +24,15 @@ const MyPostsPage = () => {
       </div>
       <div className="h-px w-full my-10 bg-foreground/20" />
       {isGettingAllPostsByUserId ? (
-        <p>Loading...</p>
-      ) : (
+        <LoadingSkeletonPost type="large" />
+      ) : postsByUserId && postsByUserId.length > 0 ? (
         <div className="flex flex-col gap-10">
-          {postsByUserId.length > 0 ? (
-            postsByUserId.map((post) => <MyPost key={post.id} post={post} />)
-          ) : (
-            <NoPost />
-          )}
+          {postsByUserId.map((post) => (
+            <MyPost key={post.id} post={post} />
+          ))}
         </div>
+      ) : (
+        <NoPost />
       )}
     </div>
   );
