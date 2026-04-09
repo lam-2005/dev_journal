@@ -2,12 +2,13 @@ import Image from "next/image";
 import React from "react";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Heading from "./Heading";
+import Link from "next/link";
 
 const TrendingPostSection = () => {
   return (
     <section className="mt-20">
       <Heading>
-        <span className="font-extrabold">Trending</span> Post
+        <span className="font-extrabold">About</span> Me
       </Heading>
 
       <div className="absolute z-9 max-w-[40%] h-125 right-0 -translate-y-20 ">
@@ -22,21 +23,37 @@ const TrendingPostSection = () => {
       <div className="max-w-200 py-20 bg-secondary-background px-15 mt-40 relative left-1/2 -translate-x-3/5 z-10 ">
         <div className="h-[95%] w-20 bg-primary z-11 absolute right-0 translate-x-1/2"></div>
         <h1 className="text-4xl w-[75%] font-bold line-clamp-3">
-          Technology Is Quietly Reshaping How We Live, Work, and Think
+          The journey from Zero to Fullstack
         </h1>
+
         <p className="leading-6 font-mono mt-15 text-sm">
-          Over the past few decades, technology has evolved from a specialized
-          field into the underlying infrastructure of modern life. Today, almost
-          every industry—from education and healthcare to finance and
-          entertainment—relies on digital systems to operate and scale. What
-          makes this transformation remarkable is not only the speed at which it
-          is happening, but also how deeply technology is becoming embedded in
-          everyday decisions. Many people interact with advanced systems dozens
-          or even hundreds of times a day without noticing it.
+          Hi there, I&apos;m <strong>Lam</strong>! It&apos;s great that you
+          visited this little corner.
         </p>
-        <button className="border border-foreground px-8 py-2 mt-15 flex gap-2 items-center justify-center font-mono">
+        <p className="mt-4 leading-6 font-mono text-sm">
+          Thank you for taking the time to stop by my blog. This isn&apos;t just
+          a place to store my code; it&apos;s also a diary documenting my
+          journey conquering the ever-changing yet incredibly exciting world of
+          Information Technology.
+        </p>
+        <p className="mt-4 leading-6 font-mono text-sm">
+          From my early days in programming, I understand the feeling of being
+          &quot;lost&quot; amidst the countless new technologies that emerge
+          every day. I used to spend hours fixing a small bug or struggling to
+          optimize a user interface.
+        </p>
+        <p className="mt-4 leading-6 font-mono text-sm">
+          That&apos;s why this blog was created: to simplify complex things. I
+          want to share what I&apos;ve learned, from managing application state
+          (State Management) to building real-time chat systems and designing
+          standard UI/UX interfaces.
+        </p>
+        <Link
+          href={"/about-us"}
+          className="border border-foreground px-8 py-2 mt-15 flex gap-2 items-center justify-center font-mono w-fit"
+        >
           Read more <IoIosArrowRoundForward className="text-2xl" />
-        </button>
+        </Link>
       </div>
     </section>
   );

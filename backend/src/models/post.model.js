@@ -50,13 +50,50 @@ const PostModel = {
 
   getRecentPosts: async () => {
     const result = await pool.query(
-      "SELECT * FROM blogs ORDER BY create_at DESC LIMIT 3",
+      `SELECT b.*, 
+     (SELECT COUNT(*) FROM comments WHERE post_id = b.id) as comment_count
+     FROM blogs b 
+     ORDER BY create_at DESC LIMIT 3`,
     );
     return result.rows;
   },
   getById: async (id) => {
     const result = await pool.query("select * from blogs where id = $1", [id]);
     return result.rows[0];
+  },
+  addComment: async (data) => {
+    const { user_id, post_id, comment } = data;
+    const query = `
+      INSERT INTO comments (user_id, post_id, comment) 
+      VALUES ($1, $2, $3) 
+      RETURNING *;
+    `;
+    const values = [user_id, post_id, comment];
+    const { rows } = await pool.query(query, values);
+
+    // Sau khi insert, lấy kèm thông tin user để trả về cho tiện hiển thị
+    const commentWithUser = await pool.query(
+      `
+        SELECT c.*, u.name as user_name, u.avatar as user_avatar
+        FROM comments c
+        JOIN users u ON c.user_id = u.id
+        WHERE c.id = $1
+    `,
+      [rows[0].id],
+    );
+
+    return commentWithUser.rows[0];
+  },
+  getCommentsByPostId: async (post_id) => {
+    const query = `
+      SELECT c.*, u.name as user_name, u.avatar as user_avatar
+      FROM comments c
+      JOIN users u ON c.user_id = u.id
+      WHERE c.post_id = $1
+      ORDER BY c.create_at DESC;
+    `;
+    const { rows } = await pool.query(query, [post_id]);
+    return rows;
   },
 };
 

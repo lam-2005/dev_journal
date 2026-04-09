@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
-import { PostType } from "@/interfaces/post.interface";
+import { CommentType, PostType } from "@/interfaces/post.interface";
 import { toast } from "react-toastify";
 
 type BlogStoreType = {
@@ -32,6 +32,13 @@ type BlogStoreType = {
 
   isUpdatingPost: boolean;
   updatePost: ({ id, data }: { id: string; data: PostType }) => Promise<void>;
+
+  isCommenting: boolean;
+  addComment: (data: { post_id: string; comment: string }) => Promise<void>;
+
+  comments: CommentType[];
+  isGettingComments: boolean;
+  getComments: (postId: string) => Promise<void>;
 };
 
 const useBlogStore = create<BlogStoreType>((set) => {
@@ -186,6 +193,42 @@ const useBlogStore = create<BlogStoreType>((set) => {
         throw error;
       } finally {
         set({ isUpdatingPost: false });
+      }
+    },
+    isCommenting: false,
+    addComment: async (data) => {
+      set({ isCommenting: true });
+      try {
+        const res = await axios.post("/api/blog/comment", data);
+
+        // Bình luận mới vừa tạo xong trả về từ Backend
+        const newCmt = res.data.data;
+
+        // Cập nhật mảng để hiển thị ngay lập tức (Optimistic Update)
+        set((state) => ({
+          comments: [newCmt, ...state.comments],
+        }));
+        toast.success("Comment posted successfully!");
+      } catch (error: any) {
+        console.error("Error commenting:", error.response?.data?.message);
+        toast.error(error.response?.data?.message || "Failed to post comment");
+        throw error;
+      } finally {
+        set({ isCommenting: false });
+      }
+    },
+    comments: [],
+    isGettingComments: false,
+    getComments: async (postId: string) => {
+      set({ isGettingComments: true });
+      try {
+        const res = await axios.get(`/api/blog/post/comments/${postId}`);
+        set({ comments: res.data?.data || [] });
+      } catch (error: any) {
+        console.error("Error fetching comments:", error);
+        set({ comments: [] });
+      } finally {
+        set({ isGettingComments: false });
       }
     },
   };

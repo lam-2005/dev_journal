@@ -5,7 +5,7 @@ const AboutUs = () => {
   return (
     <div className="mt-20">
       <Heading>
-        <span className="font-extrabold text-7xl">About Us</span>
+        <span className="font-extrabold text-7xl">About Me</span>
       </Heading>
       <div className="font-mono mt-20 max-w-200 mx-auto space-y-10">
         <h1 className="text-3xl font-sans font-bold">

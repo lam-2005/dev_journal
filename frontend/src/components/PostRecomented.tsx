@@ -40,8 +40,9 @@ const PostRecomented = ({ post }: { post: PostType }) => {
                   <div className="flex gap-2 items-center">
                     <FiEye className="text-lg" /> 0
                   </div>
+
                   <div className="flex gap-2 items-center">
-                    <TiMessage className="text-xl" /> 0
+                    <TiMessage className="text-xl" /> {post.comment_count}
                   </div>
                 </div>
                 <div className="text-red-500 text-2xl">
@@ -71,7 +72,8 @@ const PostRecomented = ({ post }: { post: PostType }) => {
                   <FiEye className="text-lg" /> 0
                 </div>
                 <div className="flex gap-2 items-center">
-                  <TiMessage className="text-xl" /> 0
+                  <TiMessage className="text-xl" />
+                  {post.comment_count}
                 </div>
               </div>
               <div className="text-red-500 text-2xl">

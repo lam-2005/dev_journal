@@ -1,4 +1,4 @@
-import { moderateContent } from "../service/ai.service.js";
+import { moderateComment, moderateContent } from "../service/ai.service.js";
 import PostService from "../service/post.service.js";
 
 const PostController = {
@@ -201,6 +201,149 @@ const PostController = {
         success: false,
         message: "Internal Server Error",
         error: error.message,
+      });
+    }
+  },
+  addComment: async (data) => {
+    try {
+      const { user_id, blog_id, content } = data;
+
+      if (!content || content.trim() === "") {
+        throw new Error("Comment content cannot be empty");
+      }
+
+      const post = await PostModel.getById(blog_id);
+      if (!post) {
+        throw new Error("Post not found to comment");
+      }
+
+      const newComment = await PostModel.addComment({
+        user_id,
+        blog_id,
+        content: content.trim(),
+      });
+
+      return newComment;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addComment: async (req, res) => {
+    try {
+      const { blog_id, content } = req.body;
+      const user_id = req.user.id;
+
+      if (!blog_id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Blog ID is required" });
+      }
+
+      try {
+        const moderation = await moderateContent("", content);
+        if (!moderation.valid) {
+          return res.status(400).json({
+            success: false,
+            message: "Your comment contains inappropriate content.",
+            result: moderation,
+          });
+        }
+      } catch (aiError) {
+        console.error("AI Moderation Error (Comment):", aiError.message);
+      }
+
+      const comment = await PostService.addComment({
+        user_id,
+        blog_id,
+        content,
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: "Comment added successfully",
+        data: comment,
+      });
+    } catch (error) {
+      console.error("Error in addComment Controller: ", error);
+      const statusCode =
+        error.message === "Post not found to comment" ? 404 : 500;
+      return res.status(statusCode).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+    }
+  },
+  addComment: async (req, res) => {
+    try {
+      const { post_id, comment } = req.body;
+      const user_id = req.user.id;
+
+      if (!post_id) {
+        return res.status(400).json({
+          success: false,
+          message: "Post ID is required",
+        });
+      }
+
+      try {
+        const moderation = await moderateComment(comment);
+
+        if (!moderation.valid) {
+          return res.status(400).json({
+            success: false,
+            message: "The comment was rejected due to inappropriate content.",
+            result: moderation,
+          });
+        }
+      } catch (error) {
+        console.error("AI Moderation Error (Comment):", error.message);
+      }
+      const newComment = await PostService.addComment({
+        user_id,
+        post_id,
+        comment,
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: "Comment posted successfully",
+        data: newComment,
+      });
+    } catch (error) {
+      console.error("Error in addComment Controller: ", error);
+
+      const statusCode = error.message === "Target post not found" ? 404 : 500;
+
+      return res.status(statusCode).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
+    }
+  },
+  getComments: async (req, res) => {
+    try {
+      const { id_post } = req.params;
+
+      if (!id_post) {
+        return res.status(400).json({
+          success: false,
+          message: "Post ID is required",
+        });
+      }
+
+      const comments = await PostService.getCommentsByPostId(id_post);
+
+      return res.status(200).json({
+        success: true,
+        message: "Comments retrieved successfully",
+        data: comments,
+      });
+    } catch (error) {
+      console.error("Error in getComments Controller: ", error);
+      const statusCode = error.message === "Target post not found" ? 404 : 500;
+      return res.status(statusCode).json({
+        success: false,
+        message: error.message || "Internal Server Error",
       });
     }
   },

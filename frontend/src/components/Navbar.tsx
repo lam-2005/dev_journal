@@ -18,7 +18,7 @@ const links: LinkType = [
     href: "/blog",
   },
   {
-    name: "About Us",
+    name: "About Me",
     href: "/about-us",
   },
   {
