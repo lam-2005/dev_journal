@@ -182,6 +182,43 @@ const PostService = {
       throw error;
     }
   },
+  addComment: async (data) => {
+    try {
+      const { user_id, post_id, comment } = data;
+
+      if (!comment || comment.trim() === "") {
+        throw new Error("Comment content is required");
+      }
+
+      // Check if post exists
+      const post = await PostModel.getById(post_id);
+      if (!post) {
+        throw new Error("Target post not found");
+      }
+
+      const newComment = await PostModel.addComment({
+        user_id,
+        post_id,
+        comment: comment.trim(),
+      });
+
+      return newComment;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getCommentsByPostId: async (post_id) => {
+    try {
+      // Kiểm tra bài viết tồn tại
+      const post = await PostModel.getById(post_id);
+      if (!post) throw new Error("Target post not found");
+
+      const comments = await PostModel.getCommentsByPostId(post_id);
+      return comments;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default PostService;

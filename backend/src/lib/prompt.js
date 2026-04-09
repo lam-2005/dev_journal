@@ -33,4 +33,26 @@ const moderateContentPrompt = (title, content) => {
     `;
 };
 
-export { moderateContentPrompt };
+const moderateCommentPrompt = (comment) => {
+  return `
+    Bạn là hệ thống kiểm duyệt bình luận chuyên nghiệp.
+
+    Nhiệm vụ:
+    Đánh giá bình luận dưới đây theo các tiêu chí:
+    1. Công kích cá nhân, thù ghét hoặc bắt nạt (Personal attacks, hate speech).
+    2. Ngôn từ tục tĩu, thô lỗ hoặc không văn minh (Profanity, rude language).
+    3. Spam, chèn link quảng cáo, lừa đảo (Spam, phishing links).
+    4. Nội dung hoàn toàn vô nghĩa hoặc không liên quan đến môi trường học thuật/công nghệ.
+
+    Yêu cầu:
+    - Chỉ cần trả về kết quả dưới dạng JSON: {"valid": boolean, "reason": "Short reason in English"}
+    - Nếu bình luận tích cực, mang tính xây dựng hoặc hỏi đáp học thuật thì "valid": true.
+    - Nếu bình luận vi phạm các quy tắc trên thì "valid": false.
+
+    Bình luận cần kiểm duyệt:
+    """
+    ${comment}
+    """
+    `;
+};
+export { moderateContentPrompt, moderateCommentPrompt };

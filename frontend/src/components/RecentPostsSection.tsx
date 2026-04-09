@@ -12,7 +12,7 @@ const RecentPostsSection = () => {
     getAllPostsRecent();
   }, [getAllPostsRecent]);
   return (
-    <section className="flex flex-col items-center gap-20">
+    <section className="flex flex-col items-center gap-20 mt-20">
       <h1 className="text-5xl font-light text-center">
         Recent <span className="font-extrabold">Blog</span> Posts
       </h1>

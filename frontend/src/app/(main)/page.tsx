@@ -7,7 +7,7 @@ const Home = () => {
     <div>
       <HeroSection />
       <TrendingPostSection />
-      <TopAuthorSection />
+      {/* <TopAuthorSection /> */}
       <RecentPostsSection />
     </div>
   );

@@ -1,4 +1,5 @@
 "use client";
+import CommentContainer from "@/components/CommentContainer";
 import LoadingSkeletonPost from "@/components/LoadingSkeletonPost";
 import NoPost from "@/components/NoPost";
 import PostRecomented from "@/components/PostRecomented";
@@ -19,6 +20,7 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
     getAllPostsRecent,
     postsRecent,
     isGettingAllPostsRecent,
+    comments,
   } = useBlogStore();
   const { userById, getUserById } = useAuthStore();
 
@@ -70,14 +72,15 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
         <div className="my-5 h-px w-full bg-foreground/20" />
         <div className="font-mono flex text-sm justify-between">
           <div className="flex gap-5 ">
-            <p>{postBySlug?.view} views</p>
-            <p>0 comments</p>
+            <p>{postBySlug?.view || 0} views</p>
+            <p>{comments?.length || 0} comments</p>
           </div>
           <div className="text-red-500 text-2xl ">
             <CiHeart />
           </div>
         </div>
       </div>
+
       <div className="font-mono mt-20">
         <div className="flex justify-between">
           <h3 className="text-xl">Recent Posts</h3>
@@ -99,6 +102,8 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
           <NoPost />
         )}
       </div>
+
+      <CommentContainer postId={postBySlug?.id ?? ""} />
     </div>
   );
 };

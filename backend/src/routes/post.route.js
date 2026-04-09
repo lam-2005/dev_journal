@@ -15,4 +15,7 @@ router.get("/post/id/:id_post", PostController.getById);
 
 router.delete("/delete/:id", protectedRoute, PostController.delete);
 router.put("/update/:id_post", protectedRoute, PostController.update);
+
+router.post("/comment", protectedRoute, PostController.addComment);
+router.get("/post/comments/:id_post", PostController.getComments);
 export default router;
