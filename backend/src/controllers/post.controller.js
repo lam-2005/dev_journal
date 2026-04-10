@@ -64,9 +64,11 @@ const PostController = {
     }
   },
 
-  getRecentPosts: async (_, res) => {
+  getRecentPosts: async (req, res) => {
     try {
-      const posts = await PostService.getRecentPosts();
+      const userId = req.user?.id || null;
+
+      const posts = await PostService.getRecentPosts(userId);
       return res.status(200).json({
         success: true,
         message: "Posts retrieved successfully",
@@ -105,8 +107,10 @@ const PostController = {
   getBySlug: async (req, res) => {
     try {
       const slug = req.params.slug;
+      const userId = req.user?.id || null;
       if (!slug) return res.status(400).json({ message: "Slug is required" });
-      const post = await PostService.getBySlug(slug);
+
+      const post = await PostService.getBySlug(slug, userId);
 
       return res.status(200).json({
         success: true,
@@ -345,6 +349,27 @@ const PostController = {
         success: false,
         message: error.message || "Internal Server Error",
       });
+    }
+  },
+
+  likePost: async (req, res) => {
+    try {
+      const { post_id } = req.body;
+      const user_id = req.user.id; // Lấy từ token qua protectedRoute
+
+      if (!post_id)
+        return res
+          .status(400)
+          .json({ success: false, message: "Missing post_id" });
+
+      const data = await PostService.handleLike(user_id, post_id);
+
+      return res.status(200).json({
+        success: true,
+        data: data, // Trả về { liked: true/false, likeCount: X }
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 };

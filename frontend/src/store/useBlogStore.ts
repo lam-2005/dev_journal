@@ -39,6 +39,9 @@ type BlogStoreType = {
   comments: CommentType[];
   isGettingComments: boolean;
   getComments: (postId: string) => Promise<void>;
+
+  isLiking: boolean;
+  likePost: (postId: string) => Promise<void>;
 };
 
 const useBlogStore = create<BlogStoreType>((set) => {
@@ -229,6 +232,35 @@ const useBlogStore = create<BlogStoreType>((set) => {
         set({ comments: [] });
       } finally {
         set({ isGettingComments: false });
+      }
+    },
+
+    isLiking: false,
+
+    likePost: async (postId: string) => {
+      set({ isLiking: true });
+      try {
+        const res = await axios.post("/api/blog/like", { post_id: postId });
+        const { liked, likeCount } = res.data.data;
+
+        // Cập nhật Instant UI cho cả danh sách bài viết và bài viết chi tiết
+        set((state) => ({
+          postsRecent: state.postsRecent.map((p) =>
+            p.id === postId
+              ? { ...p, like_count: likeCount, is_liked: liked }
+              : p,
+          ),
+          postBySlug:
+            state.postBySlug?.id === postId
+              ? { ...state.postBySlug, like_count: likeCount, is_liked: liked }
+              : state.postBySlug,
+        }));
+
+        if (liked) return;
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || "Login to like this post");
+      } finally {
+        set({ isLiking: false });
       }
     },
   };

@@ -12,10 +12,19 @@ const PostModel = {
     const { rows } = await pool.query(query, values);
     return rows[0];
   },
-  findBySlug: async (slug) => {
-    const result = await pool.query("SELECT * FROM blogs WHERE slug = $1", [
-      slug,
-    ]);
+  findBySlug: async (slug, userId = null) => {
+    const query = `
+    SELECT 
+      b.*, 
+      (SELECT COUNT(*) FROM likes WHERE post_id = b.id) as like_count,
+      CAST(EXISTS (
+        SELECT 1 FROM likes WHERE post_id = b.id AND user_id = $2
+      ) AS BOOLEAN) as is_liked
+    FROM blogs b 
+    WHERE b.slug = $1
+  `;
+
+    const result = await pool.query(query, [slug, userId]);
     return result.rows[0];
   },
   getAll: async () => {
@@ -48,14 +57,25 @@ const PostModel = {
     return result.rows[0];
   },
 
-  getRecentPosts: async () => {
+  getRecentPosts: async (userId = null) => {
     const result = await pool.query(
       `SELECT b.*, 
-     (SELECT COUNT(*) FROM comments WHERE post_id = b.id) as comment_count
+      (SELECT COUNT(*) FROM comments WHERE post_id = b.id) as comment_count,
+
+      (SELECT COUNT(*) FROM likes WHERE post_id = b.id) as like_count,
+
+      EXISTS (SELECT 1 FROM likes WHERE post_id = b.id AND user_id = $1) as "is_liked"
+      
      FROM blogs b 
      ORDER BY create_at DESC LIMIT 3`,
+      [userId],
     );
-    return result.rows;
+
+    return result.rows.map((row) => ({
+      ...row,
+      comment_count: parseInt(row.comment_count) || 0,
+      like_count: parseInt(row.like_count) || 0,
+    }));
   },
   getById: async (id) => {
     const result = await pool.query("select * from blogs where id = $1", [id]);
@@ -70,8 +90,6 @@ const PostModel = {
     `;
     const values = [user_id, post_id, comment];
     const { rows } = await pool.query(query, values);
-
-    // Sau khi insert, lấy kèm thông tin user để trả về cho tiện hiển thị
     const commentWithUser = await pool.query(
       `
         SELECT c.*, u.name as user_name, u.avatar as user_avatar
@@ -94,6 +112,36 @@ const PostModel = {
     `;
     const { rows } = await pool.query(query, [post_id]);
     return rows;
+  },
+  toggleLike: async (user_id, post_id) => {
+    // Kiểm tra tồn tại
+    const check = await pool.query(
+      "SELECT 1 FROM likes WHERE user_id = $1 AND post_id = $2",
+      [user_id, post_id],
+    );
+
+    if (check.rows.length > 0) {
+      await pool.query(
+        "DELETE FROM likes WHERE user_id = $1 AND post_id = $2",
+        [user_id, post_id],
+      );
+      return { liked: false };
+    } else {
+      await pool.query("INSERT INTO likes (user_id, post_id) VALUES ($1, $2)", [
+        user_id,
+        post_id,
+      ]);
+      return { liked: true };
+    }
+  },
+
+  // Lấy tổng số lượt like của bài viết
+  getLikeCount: async (post_id) => {
+    const res = await pool.query(
+      "SELECT COUNT(*) FROM likes WHERE post_id = $1",
+      [post_id],
+    );
+    return parseInt(res.rows[0].count) || 0;
   },
 };
 

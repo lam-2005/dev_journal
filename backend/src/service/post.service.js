@@ -69,10 +69,9 @@ const PostService = {
     }
   },
 
-  getRecentPosts: async () => {
+  getRecentPosts: async (userId) => {
     try {
-      const posts = await PostModel.getRecentPosts();
-      return posts;
+      return await PostModel.getRecentPosts(userId);
     } catch (error) {
       throw error;
     }
@@ -160,9 +159,9 @@ const PostService = {
       throw error;
     }
   },
-  getBySlug: async (slug) => {
+  getBySlug: async (slug, userId) => {
     try {
-      const post = await PostModel.findBySlug(slug);
+      const post = await PostModel.findBySlug(slug, userId);
       if (!post) {
         throw new Error("Post not found");
       }
@@ -218,6 +217,19 @@ const PostService = {
     } catch (error) {
       throw error;
     }
+  },
+
+  handleLike: async (user_id, post_id) => {
+    // 1. Thực hiện toggle trong DB
+    const result = await PostModel.toggleLike(user_id, post_id);
+
+    // 2. Lấy số lượng like mới nhất để cập nhật UI ngay lập tức
+    const likeCount = await PostModel.getLikeCount(post_id);
+
+    return {
+      liked: result.liked,
+      likeCount: likeCount,
+    };
   },
 };
 

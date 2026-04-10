@@ -10,6 +10,8 @@ export interface PostType {
   view?: number;
   user_id?: string;
   comment_count: string | number;
+  is_liked?: boolean;
+  like_count?: number;
 }
 
 export interface CommentType {

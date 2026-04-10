@@ -9,7 +9,7 @@ import useBlogStore from "@/store/useBlogStore";
 import Link from "next/link";
 import { use, useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
-import { FaUserCircle } from "react-icons/fa";
+import { FaHeart, FaUserCircle } from "react-icons/fa";
 
 const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = use(params);
@@ -21,6 +21,7 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
     postsRecent,
     isGettingAllPostsRecent,
     comments,
+    likePost,
   } = useBlogStore();
   const { userById, getUserById } = useAuthStore();
 
@@ -37,6 +38,12 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
       getUserById(postBySlug.user_id);
     }
   }, [getUserById, postBySlug?.user_id]);
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.preventDefault(); // Ngăn Link chuyển hướng trang
+    e.stopPropagation(); // Ngăn sự kiện nổi bọt
+    if (postBySlug?.id) likePost(postBySlug.id);
+  };
 
   if (isGettingPostBySlug)
     return (
@@ -75,9 +82,21 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
             <p>{postBySlug?.view || 0} views</p>
             <p>{comments?.length || 0} comments</p>
           </div>
-          <div className="text-red-500 text-2xl ">
-            <CiHeart />
-          </div>
+          <button
+            onClick={handleLike}
+            className="flex items-center gap-1 cursor-pointer group"
+          >
+            <span className="text-xs text-foreground">
+              {postBySlug?.like_count || ""}
+            </span>
+            <div className="text-2xl transition-transform group-hover:scale-110 active:scale-90">
+              {postBySlug?.is_liked ? (
+                <FaHeart className="text-red-500" />
+              ) : (
+                <CiHeart className="text-foreground" />
+              )}
+            </div>
+          </button>
         </div>
       </div>
 
