@@ -6,6 +6,7 @@ import PostRecomented from "@/components/PostRecomented";
 import { convertDate, estimateReadingTime } from "@/lib/utils";
 import useAuthStore from "@/store/useAuthStore";
 import useBlogStore from "@/store/useBlogStore";
+import Image from "next/image";
 import Link from "next/link";
 import { use, useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
@@ -40,8 +41,8 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
   }, [getUserById, postBySlug?.user_id]);
 
   const handleLike = (e: React.MouseEvent) => {
-    e.preventDefault(); // Ngăn Link chuyển hướng trang
-    e.stopPropagation(); // Ngăn sự kiện nổi bọt
+    e.preventDefault();
+    e.stopPropagation();
     if (postBySlug?.id) likePost(postBySlug.id);
   };
 
@@ -58,7 +59,24 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
       <div className="container">
         <div>
           <div className="flex items-center gap-2 text-sm">
-            <FaUserCircle className="text-3xl" /> {userById?.name}{" "}
+            <Link
+              href={`/profile/${postBySlug?.user_id}`}
+              className="flex items-center gap-2 font-bold"
+            >
+              {" "}
+              {userById?.avatar ? (
+                <Image
+                  src={userById.avatar}
+                  alt="avatar"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-full"
+                />
+              ) : (
+                <FaUserCircle className="text-3xl" />
+              )}{" "}
+              {userById?.name}{" "}
+            </Link>
             <span>•</span>{" "}
             <span className="font-mono">
               {convertDate(postBySlug?.create_at ?? "")}

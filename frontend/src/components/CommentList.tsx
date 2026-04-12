@@ -24,8 +24,8 @@ const CommentList = () => {
 
   if (!comments || comments.length === 0) {
     return (
-      <div className="mt-10 font-mono text-sm text-foreground/50">
-        No comments yet. Be the first to share your thoughts!
+      <div className="mt-10 font-mono text-sm text-foreground text-center">
+        No comments yet. Be the first to share your thoughts.
       </div>
     );
   }

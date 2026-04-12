@@ -4,12 +4,14 @@ import useAuthStore from "@/store/useAuthStore";
 import { ReactNode, useEffect } from "react";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { checkAuth, isCheckingAuth } = useAuthStore();
+  const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-  if (isCheckingAuth) return <p>Please wait...</p>;
+  if (isCheckingAuth && !authUser) {
+    return <p>Please wait...</p>;
+  }
   return <>{children}</>;
 };
 

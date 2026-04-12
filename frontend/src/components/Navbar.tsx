@@ -5,6 +5,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
 import MenuDropDown from "./MenuDropDown";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type LinkType = { name: string; href: string }[];
 
@@ -50,10 +51,10 @@ const Navbar = () => {
   return (
     <div className="flex items-center py-8 bg-secondary-background ">
       <div className="container">
-        <h2 className="font-bold text-2xl">
+        <Link href={"/"} className="font-bold text-2xl">
           Dev
           <span className="inline-block w-fit h-fit bg-primary">Journal</span>
-        </h2>
+        </Link>
       </div>
       <nav className="container">
         <ul className="flex items-center justify-end text-lg ">
@@ -71,7 +72,17 @@ const Navbar = () => {
                 className="flex items-center gap-1 cursor-pointer select-none"
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <FaUserCircle className="text-3xl" />
+                {authUser?.avatar ? (
+                  <Image
+                    src={authUser.avatar}
+                    alt="avatar"
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-full"
+                  />
+                ) : (
+                  <FaUserCircle className="text-3xl" />
+                )}
                 <FiChevronDown className="text-2xl" />
               </div>
               {isOpen && <MenuDropDown />}

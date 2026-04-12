@@ -9,7 +9,7 @@ export interface PostType {
   update_at?: string;
   view?: number;
   user_id?: string;
-  comment_count: string | number;
+  comment_count?: string | number;
   is_liked?: boolean;
   like_count?: number;
 }
