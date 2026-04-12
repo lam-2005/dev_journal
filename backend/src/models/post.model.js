@@ -35,7 +35,15 @@ const PostModel = {
   },
   getAllByUserId: async (user_id) => {
     const result = await pool.query(
-      "SELECT * FROM blogs WHERE user_id = $1 ORDER BY create_at DESC",
+      `SELECT b.*, 
+      (SELECT COUNT(*) FROM comments WHERE post_id = b.id) as comment_count,
+
+      (SELECT COUNT(*) FROM likes WHERE post_id = b.id) as like_count,
+
+      EXISTS (SELECT 1 FROM likes WHERE post_id = b.id AND user_id = $1) as "is_liked"
+      
+     FROM blogs b WHERE b.user_id = $1
+     ORDER BY create_at DESC `,
       [user_id],
     );
     return result.rows;

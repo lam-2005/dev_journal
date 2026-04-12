@@ -24,5 +24,32 @@ const AuthModel = {
     const { rows } = await pool.query(query, values);
     return rows[0];
   },
+  update: async (userId, data) => {
+    const fields = [];
+    const values = [];
+    let placeholderIndex = 1;
+
+    for (const [key, value] of Object.entries(data)) {
+      if (value !== undefined && value !== null) {
+        fields.push(`${key} = $${placeholderIndex}`);
+        values.push(value);
+        placeholderIndex++;
+      }
+    }
+
+    if (fields.length === 0) return null;
+
+    values.push(userId);
+
+    const query = `
+    UPDATE users 
+    SET ${fields.join(", ")}, update_at = CURRENT_TIMESTAMP
+    WHERE id = $${placeholderIndex}
+    RETURNING id, name, email, avatar, background, introduction, update_at, create_at;
+  `;
+
+    const { rows } = await pool.query(query, values);
+    return rows[0];
+  },
 };
 export default AuthModel;
