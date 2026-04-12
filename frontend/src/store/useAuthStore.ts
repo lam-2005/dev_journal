@@ -19,16 +19,19 @@ type AuthStoreType = {
   userById: UserType | null;
   isGettingUserById: boolean;
   getUserById: (id: string) => Promise<void>;
+
+  isUpdatingProfile: boolean;
+  updateProfile: (data: Partial<UserType>) => Promise<boolean>;
 };
 
-const privateRoute = ["/create-post", "/my-posts"];
+const privateRoute = ["/create-post", "/my-posts", "/profile"];
 
 const useAuthStore = create<AuthStoreType>((set) => ({
   //check auth
   authUser: null,
-  isCheckingAuth: true,
+  isCheckingAuth: false,
   checkAuth: async () => {
-    set({ isCheckingAuth: false });
+    set({ isCheckingAuth: true });
     try {
       const res = await axios.get("/api/auth/check");
       set({ authUser: res.data });
@@ -51,8 +54,8 @@ const useAuthStore = create<AuthStoreType>((set) => ({
       toast.success(res.data?.message);
       return res.data?.success;
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
-      console.error("Error in signup: ", error.response?.data?.message);
+      toast.error(error.response?.data?.error);
+      console.error("Error in signup: ", error.response?.data?.error);
       throw error;
     } finally {
       set({ isSigningUp: false });
@@ -69,8 +72,8 @@ const useAuthStore = create<AuthStoreType>((set) => ({
       toast.success(res.data?.message);
       return res.data?.success;
     } catch (error: any) {
-      toast.error(error.response?.data?.message);
-      console.error("Error in login: ", error.response?.data?.message);
+      toast.error(error.response?.data?.error);
+      console.error("Error in login: ", error.response?.data?.error);
       throw error;
     } finally {
       set({ isLoggingIn: false });
@@ -100,15 +103,40 @@ const useAuthStore = create<AuthStoreType>((set) => ({
     if (!id) return;
     set({ isGettingUserById: true, userById: null });
     try {
-      const res = await axios.get(`/api/auth/${id}`);
+      const res = await axios.get(`/api/auth/get/${id}`);
 
       set({ userById: res.data?.data });
     } catch (error: any) {
-      console.error(error?.response?.data?.message || "Error getting user");
+      console.error(error?.response?.data?.error || "Error getting user");
       set({ userById: null });
       throw error;
     } finally {
       set({ isGettingUserById: false });
+    }
+  },
+
+  isUpdatingProfile: false,
+  updateProfile: async (data: Partial<UserType>) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axios.put("/api/auth/update", data);
+
+      if (res.data?.success) {
+        set({ authUser: res.data.data });
+        toast.success(res.data?.message || "Profile updated!");
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      const errorMsg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Failed to update profile";
+      toast.error(errorMsg);
+      console.error("Error in updateProfile: ", errorMsg);
+      return false;
+    } finally {
+      set({ isUpdatingProfile: false });
     }
   },
 }));

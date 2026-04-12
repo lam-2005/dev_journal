@@ -54,12 +54,12 @@ const useBlogStore = create<BlogStoreType>((set) => {
         toast.success("Post created successfully!");
         return res.data;
       } catch (error: any) {
-        console.error("Error creating post:", error.response?.data?.message);
+        console.error("Error creating post:", error.response?.data?.error);
         toast.error(
           "The post was not accepted. Please check the title and content and try again.",
         );
         toast.warning(
-          error.response?.data?.result?.reason || error.response?.data?.message,
+          error.response?.data?.result?.reason || error.response?.data?.error,
           {
             autoClose: 22000,
           },
@@ -79,7 +79,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         set({ posts: res.data?.data || [] });
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         throw error;
       } finally {
         set({ isGettingAllPosts: false });
@@ -96,7 +96,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         set({ postsRecent: res.data?.data || [] });
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         throw error;
       } finally {
         set({ isGettingAllPostsRecent: false });
@@ -112,7 +112,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         set({ postBySlug: res.data?.data || null });
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         set({ postBySlug: null });
         throw error;
       } finally {
@@ -129,7 +129,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         set({ postById: res.data?.data || null });
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         set({ postById: null });
         throw error;
       } finally {
@@ -146,7 +146,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         set({ postsByUserId: res.data?.data || [] });
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         throw error;
       } finally {
         set({ isGettingAllPostsByUserId: false });
@@ -168,7 +168,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
         toast.success("Post deleted successfully!");
         return res.data;
       } catch (error: any) {
-        console.error(error?.response?.data?.message || "Error getting posts");
+        console.error(error?.response?.data?.error || "Error getting posts");
         throw error;
       } finally {
         set({ isDeletingPost: false });
@@ -183,12 +183,12 @@ const useBlogStore = create<BlogStoreType>((set) => {
         toast.success("Post updated successfully!");
         return res.data;
       } catch (error: any) {
-        console.error("Error updating post:", error.response?.data?.message);
+        console.error("Error updating post:", error.response?.data?.error);
         toast.error(
           "The post was not accepted. Please check the title and content and try again.",
         );
         toast.warning(
-          error.response?.data?.result?.reason || error.response?.data?.message,
+          error.response?.data?.result?.reason || error.response?.data?.error,
           {
             autoClose: 22000,
           },
@@ -213,8 +213,12 @@ const useBlogStore = create<BlogStoreType>((set) => {
         }));
         toast.success("Comment posted successfully!");
       } catch (error: any) {
-        console.error("Error commenting:", error.response?.data?.message);
-        toast.error(error.response?.data?.message || "Failed to post comment");
+        console.error("Error commenting:", error.response?.data?.error);
+        toast.error(
+          error.response?.data?.result?.reason ||
+            error.response?.data?.message ||
+            "Failed to post comment",
+        );
         throw error;
       } finally {
         set({ isCommenting: false });
@@ -258,7 +262,7 @@ const useBlogStore = create<BlogStoreType>((set) => {
 
         if (liked) return;
       } catch (error: any) {
-        toast.error(error.response?.data?.message || "Login to like this post");
+        toast.error(error.response?.data?.error || "Login to like this post");
       } finally {
         set({ isLiking: false });
       }

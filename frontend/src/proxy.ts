@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const authRoute = ["/login", "/signup"];
-const privateRoute = ["/create-post", "/my-posts"];
+const privateRoute = ["/create-post", "/my-posts", "/profile"];
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isAuthRoute = authRoute.includes(path);

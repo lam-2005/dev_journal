@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
 import { MdEdit } from "react-icons/md";
 
 const HeroSection = () => {
@@ -25,12 +25,18 @@ const HeroSection = () => {
           <span className="font-bold">people</span>.
         </h1>
         <div className="flex gap-5 mt-6 justify-center">
-          <button className="text-foreground bg-primary px-8 py-2 flex items-center justify-center gap-3 text-lg font-bold font-mono ">
+          <Link
+            href={"/create-post"}
+            className="text-foreground bg-primary px-8 py-2 flex items-center justify-center gap-3 text-lg font-bold font-mono "
+          >
             <MdEdit className="text-xl" /> Start Writing
-          </button>
-          <button className="border border-background text-background text-lg font-bold px-8 py-2  font-mono ">
+          </Link>
+          <Link
+            href={"/blog"}
+            className="border border-background text-background text-lg font-bold px-8 py-2  font-mono "
+          >
             Explore Posts
-          </button>
+          </Link>
         </div>
       </div>
     </div>

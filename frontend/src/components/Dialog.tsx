@@ -8,12 +8,12 @@ const Dialog = ({
   setIsOpenDialog,
 }: {
   title: string;
-  content?: string;
+  content?: string | React.ReactNode;
   children: React.ReactNode;
   setIsOpenDialog: (value: boolean) => void;
 }) => {
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen">
+    <div className="fixed top-0 left-0 w-screen h-screen z-100">
       <div
         className="bg-foreground/50 absolute w-full h-full z-200"
         onClick={() => setIsOpenDialog(false)}
