@@ -9,5 +9,6 @@ router.post("/logout", AuthController.logout);
 router.get("/check", protectedRoute, (req, res) => {
   res.status(200).json(req.user);
 });
-router.get("/:user_id", AuthController.getById);
+router.get("/get/:user_id", AuthController.getById);
+router.put("/update", protectedRoute, AuthController.update);
 export default router;

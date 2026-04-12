@@ -71,6 +71,17 @@ const AuthService = {
       throw error;
     }
   },
+  updateProfile: async (userId, updateData) => {
+    try {
+      const updatedUser = await AuthModel.update(userId, updateData);
+      if (!updatedUser) {
+        throw new Error("User not found or update failed");
+      }
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default AuthService;

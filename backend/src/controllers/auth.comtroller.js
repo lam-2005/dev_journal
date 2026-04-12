@@ -82,5 +82,26 @@ const AuthController = {
       });
     }
   },
+  update: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const data = req.body;
+
+      const updatedUser = await AuthService.updateProfile(userId, data);
+
+      return res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        data: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error in AuthController (update): ", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+    }
+  },
 };
 export default AuthController;
