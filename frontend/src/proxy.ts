@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 const authRoute = ["/login", "/signup"];
 const privateRoute = ["/create-post", "/my-posts"];
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isAuthRoute = authRoute.includes(path);
 
