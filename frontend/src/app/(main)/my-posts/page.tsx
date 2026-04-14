@@ -4,12 +4,9 @@ import MyPost from "@/components/MyPost";
 import NoPost from "@/components/NoPost";
 import useAuthStore from "@/store/useAuthStore";
 import useBlogStore from "@/store/useBlogStore";
-import Link from "next/link";
-import { useRouter } from "nextjs-toploader/app";
 import { useEffect } from "react";
 
 const MyPostsPage = () => {
-  const router = useRouter();
   const { isGettingAllPostsByUserId, getAllPostsByUserId, postsByUserId } =
     useBlogStore();
   const { authUser, isCheckingAuth } = useAuthStore();

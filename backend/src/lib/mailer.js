@@ -1,10 +1,16 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465, // Cổng SSL ổn định nhất trên các server Cloud
+  secure: true, // true cho port 465
   auth: {
     user: env.EMAIL_USER,
-    pass: env.EMAIL_PASS,
+    pass: env.EMAIL_PASS, // Đảm bảo đây là App Password 16 ký tự
+  },
+  // Thêm cấu hình TLS để tránh bị chặn bởi firewall của Render
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
