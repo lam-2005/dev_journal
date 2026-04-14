@@ -12,6 +12,7 @@ const transporter = nodemailer.createTransport({
   },
   // Thêm cấu hình TLS để tránh bị chặn bởi firewall của Render
   tls: {
+    servername: "smtp.gmail.com",
     rejectUnauthorized: false,
   },
 });
@@ -20,7 +21,8 @@ export const sendNotificationEmail = async (data) => {
   const { name, email, message } = data;
 
   const mailOptions = {
-    from: `"${name}" <${email}>`,
+    from: `"${name}" <${env.EMAIL_USER}>`,
+    replyTo: email,
     to: env.EMAIL_USER,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
