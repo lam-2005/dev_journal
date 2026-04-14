@@ -347,7 +347,7 @@ const ProfilePage = () => {
                   You have no posts yet.{" "}
                   <div
                     onClick={() => (window.location.href = "/create-post")}
-                    className="hover:text-primary underline font-bold"
+                    className="hover:text-primary underline font-bold inline cursor-pointer"
                   >
                     Create one
                   </div>
