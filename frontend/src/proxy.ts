@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 const authRoute = ["/login", "/signup"];
 const privateRoute = ["/create-post", "/my-posts"];
@@ -10,7 +9,7 @@ export default async function proxy(req: NextRequest) {
   const isMyProfile = path === "/profile";
 
   const isPrivateRoute = privateRoute.some((route) => path.startsWith(route));
-  const jwt = (await cookies()).get("jwt")?.value;
+  const jwt = req.cookies.get("jwt")?.value;
 
   if (jwt && isAuthRoute)
     return NextResponse.redirect(new URL("/", req.nextUrl));
