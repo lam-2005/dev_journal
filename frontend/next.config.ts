@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         // Khi bạn gọi /api/abc ở Frontend
         source: "/api/:path*",
         // Nó sẽ tự hiểu là gọi đến Render
-        destination: "https://dev-journal-7nn4.onrender.com/api/:path*",
+        destination: "https://dev-journal-7nn4.onrender.com/:path*",
       },
     ];
   },
