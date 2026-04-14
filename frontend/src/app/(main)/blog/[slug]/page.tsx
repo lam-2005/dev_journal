@@ -23,9 +23,13 @@ const BlogPostPage = ({ params }: { params: Promise<{ slug: string }> }) => {
     isGettingAllPostsRecent,
     comments,
     likePost,
+    incrementPostView,
   } = useBlogStore();
   const { userById, getUserById } = useAuthStore();
 
+  useEffect(() => {
+    incrementPostView(slug);
+  }, [slug, incrementPostView]);
   useEffect(() => {
     getAllPostsRecent();
   }, [getAllPostsRecent]);

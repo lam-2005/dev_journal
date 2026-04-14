@@ -69,9 +69,7 @@ const LoginPage = () => {
               onChange={onChange}
             />
           </div>
-          <div className="font-mono text-sm underline text-end font-bold hover:text-primary">
-            Forgot Password?
-          </div>
+
           <button
             className="font-mono bg-primary w-full p-3 font-bold mt-4 hover:brightness-75 cursor-pointer disabled:brightness-75"
             disabled={isLoggingIn}

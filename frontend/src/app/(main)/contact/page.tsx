@@ -1,7 +1,28 @@
+"use client";
 import Heading from "@/components/Heading";
-import React from "react";
+import useEmailStore, { EmailContactType } from "@/store/useEmailStore";
+import { ChangeEvent, useState } from "react";
 
 const ContactPage = () => {
+  const { sendEmailContact, isSenđingEmailContact } = useEmailStore();
+  const [data, setData] = useState<EmailContactType>({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setData({ ...data, [name as keyof EmailContactType]: value });
+  };
+
+  const handleSendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await sendEmailContact(data);
+    setData({ name: "", email: "", message: "" });
+  };
   return (
     <div className="mt-20 ">
       <Heading>
@@ -21,22 +42,15 @@ const ContactPage = () => {
         </div>
         <div className="space-y-7">
           <p>Or message me here:</p>
-          <form action="" className="space-y-6">
+          <form action="" className="space-y-6" onSubmit={handleSendEmail}>
             <div className="flex flex-col gap-2">
-              <label htmlFor="firstname">First name *</label>
+              <label htmlFor="name">Your name *</label>
               <input
                 type="text"
-                name=""
-                id="firstname"
-                className="hover:bg-secondary-background focus:bg-secondary-background bg-[#E0E0E0] border-0 outline-none px-4 py-2"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="lastname">Last name *</label>
-              <input
-                type="text"
-                name=""
-                id="lastname"
+                name="name"
+                id="name"
+                value={data.name}
+                onChange={handleChange}
                 className="hover:bg-secondary-background focus:bg-secondary-background bg-[#E0E0E0] border-0 outline-none px-4 py-2"
               />
             </div>
@@ -44,20 +58,29 @@ const ContactPage = () => {
               <label htmlFor="email">Email *</label>
               <input
                 type="text"
-                name=""
+                name="email"
                 id="email"
+                value={data.email}
+                onChange={handleChange}
                 className="hover:bg-secondary-background focus:bg-secondary-background bg-[#E0E0E0] border-0 outline-none px-4 py-2"
               />
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="message">Message *</label>
               <textarea
-                name=""
+                name="message"
                 id="message"
+                value={data.message}
+                onChange={handleChange}
                 className="hover:bg-secondary-background focus:bg-secondary-background bg-[#E0E0E0] border-0 outline-none px-4 py-2 resize-none h-25"
               />
             </div>
-            <button className="bg-primary w-full py-3 font-bold">Submit</button>
+            <button
+              className="bg-primary w-full py-3 font-bold hover:brightness-50 cursor-pointer disabled:cursor-not-allowed"
+              disabled={isSenđingEmailContact}
+            >
+              {isSenđingEmailContact ? "Submitting..." : "Submit"}
+            </button>
           </form>
         </div>
       </div>

@@ -66,7 +66,7 @@ const PostRecomented = ({ post }: { post: PostType }) => {
                 >
                   <span className="text-xs">{post.like_count || ""}</span>
                   <div className="text-2xl transition-transform group-hover:scale-110 active:scale-90">
-                    {post.is_liked ? (
+                    {!!post.is_liked ? (
                       <FaHeart className="text-red-500" />
                     ) : (
                       <CiHeart className="text-white" />
@@ -101,7 +101,6 @@ const PostRecomented = ({ post }: { post: PostType }) => {
                 </div>
               </div>
 
-              {/* NÚT TIM - PHẦN KHÔNG ẢNH */}
               <button
                 onClick={handleLike}
                 className="flex items-center gap-1 cursor-pointer group"

@@ -4,6 +4,7 @@ import NoPost from "./NoPost";
 import PostRecomented from "./PostRecomented";
 import { useEffect } from "react";
 import LoadingSkeletonPost from "./LoadingSkeletonPost";
+import Link from "next/link";
 
 const RecentPostsSection = () => {
   const { getAllPostsRecent, postsRecent, isGettingAllPostsRecent } =
@@ -25,9 +26,12 @@ const RecentPostsSection = () => {
               <PostRecomented key={post.id} post={post} />
             ))}
           </div>
-          <button className="border border-foreground px-8 py-2 flex gap-2 items-center justify-center font-mono">
+          <Link
+            href="/blog"
+            className="border border-foreground px-8 py-2 flex gap-2 items-center justify-center font-mono"
+          >
             See all
-          </button>
+          </Link>
         </>
       ) : (
         <NoPost />

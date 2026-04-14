@@ -29,7 +29,7 @@ const PostModel = {
   },
   getAll: async () => {
     const result = await pool.query(
-      "SELECT * FROM blogs ORDER BY create_at DESC",
+      "SELECT b.*, (SELECT COUNT(*) FROM comments WHERE post_id = b.id) as comment_count FROM blogs b ORDER BY create_at DESC",
     );
     return result.rows;
   },
@@ -122,7 +122,6 @@ const PostModel = {
     return rows;
   },
   toggleLike: async (user_id, post_id) => {
-    // Kiểm tra tồn tại
     const check = await pool.query(
       "SELECT 1 FROM likes WHERE user_id = $1 AND post_id = $2",
       [user_id, post_id],
@@ -143,13 +142,34 @@ const PostModel = {
     }
   },
 
-  // Lấy tổng số lượt like của bài viết
   getLikeCount: async (post_id) => {
     const res = await pool.query(
       "SELECT COUNT(*) FROM likes WHERE post_id = $1",
       [post_id],
     );
     return parseInt(res.rows[0].count) || 0;
+  },
+
+  incrementViews: async (slug) => {
+    const query = `
+      UPDATE blogs 
+      SET view = COALESCE(view, 0) + 1 
+      WHERE slug = $1 
+      RETURNING view;
+    `;
+    const { rows } = await pool.query(query, [slug]);
+    return rows[0];
+  },
+
+  getTopTrendingPost: async () => {
+    const query = `
+    SELECT * FROM blogs 
+    WHERE create_at > NOW() - INTERVAL '7 days'
+    ORDER BY view DESC 
+    LIMIT 1;
+  `;
+    const { rows } = await pool.query(query);
+    return rows[0];
   },
 };
 

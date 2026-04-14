@@ -9,5 +9,7 @@ const ENV = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  EMAIL_USER: process.env.EMAIL_USER,
+  EMAIL_PASS: process.env.EMAIL_PASS,
 };
 export default ENV;

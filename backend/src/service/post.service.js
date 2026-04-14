@@ -189,7 +189,6 @@ const PostService = {
         throw new Error("Comment content is required");
       }
 
-      // Check if post exists
       const post = await PostModel.getById(post_id);
       if (!post) {
         throw new Error("Target post not found");
@@ -208,7 +207,6 @@ const PostService = {
   },
   getCommentsByPostId: async (post_id) => {
     try {
-      // Kiểm tra bài viết tồn tại
       const post = await PostModel.getById(post_id);
       if (!post) throw new Error("Target post not found");
 
@@ -220,10 +218,8 @@ const PostService = {
   },
 
   handleLike: async (user_id, post_id) => {
-    // 1. Thực hiện toggle trong DB
     const result = await PostModel.toggleLike(user_id, post_id);
 
-    // 2. Lấy số lượng like mới nhất để cập nhật UI ngay lập tức
     const likeCount = await PostModel.getLikeCount(post_id);
 
     return {

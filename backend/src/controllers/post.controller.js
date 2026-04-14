@@ -1,3 +1,4 @@
+import PostModel from "../models/post.model.js";
 import { moderateComment, moderateContent } from "../service/ai.service.js";
 import PostService from "../service/post.service.js";
 
@@ -355,7 +356,7 @@ const PostController = {
   likePost: async (req, res) => {
     try {
       const { post_id } = req.body;
-      const user_id = req.user.id; // Lấy từ token qua protectedRoute
+      const user_id = req.user.id;
 
       if (!post_id)
         return res
@@ -366,10 +367,39 @@ const PostController = {
 
       return res.status(200).json({
         success: true,
-        data: data, // Trả về { liked: true/false, likeCount: X }
+        data: data,
       });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message });
+    }
+  },
+  updateViews: async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const result = await PostModel.incrementViews(slug);
+
+      return res.status(200).json({
+        success: true,
+        views: result.views,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error.message });
+    }
+  },
+  getTopTrending: async (req, res) => {
+    try {
+      const post = await PostModel.getTopTrendingPost();
+      if (!post) {
+        return res
+          .status(404)
+          .json({ success: false, message: "No posts found" });
+      }
+      return res.status(200).json({
+        success: true,
+        data: post,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, error: error.message });
     }
   },
 };

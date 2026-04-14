@@ -37,8 +37,8 @@ const Post = ({ data }: { data: PostType }) => {
         <div>
           <div className="h-px w-full bg-foreground" />
           <div className="flex gap-4 text-xs mt-4">
-            <div>0 views</div>
-            <div>0 comments</div>
+            <div>{data.view} views</div>
+            <div>{data?.comment_count} comments</div>
           </div>
         </div>
       </div>

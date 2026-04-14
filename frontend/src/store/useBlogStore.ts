@@ -42,9 +42,15 @@ type BlogStoreType = {
 
   isLiking: boolean;
   likePost: (postId: string) => Promise<void>;
+
+  lastViewedId: string | null;
+  incrementPostView: (slug: string) => Promise<void>;
+
+  topPost: PostType | null;
+  getTopPost: () => Promise<void>;
 };
 
-const useBlogStore = create<BlogStoreType>((set) => {
+const useBlogStore = create<BlogStoreType>((set, get) => {
   return {
     isCreatingPost: false,
     createPost: async (data: PostType) => {
@@ -204,10 +210,8 @@ const useBlogStore = create<BlogStoreType>((set) => {
       try {
         const res = await axios.post("/api/blog/comment", data);
 
-        // Bình luận mới vừa tạo xong trả về từ Backend
         const newCmt = res.data.data;
 
-        // Cập nhật mảng để hiển thị ngay lập tức (Optimistic Update)
         set((state) => ({
           comments: [newCmt, ...state.comments],
         }));
@@ -247,7 +251,6 @@ const useBlogStore = create<BlogStoreType>((set) => {
         const res = await axios.post("/api/blog/like", { post_id: postId });
         const { liked, likeCount } = res.data.data;
 
-        // Cập nhật Instant UI cho cả danh sách bài viết và bài viết chi tiết
         set((state) => ({
           postsRecent: state.postsRecent.map((p) =>
             p.id === postId
@@ -258,6 +261,12 @@ const useBlogStore = create<BlogStoreType>((set) => {
             state.postBySlug?.id === postId
               ? { ...state.postBySlug, like_count: likeCount, is_liked: liked }
               : state.postBySlug,
+
+          postsByUserId: state.postsByUserId.map((p) =>
+            p.id === postId
+              ? { ...p, like_count: likeCount, is_liked: liked }
+              : p,
+          ),
         }));
 
         if (liked) return;
@@ -265,6 +274,29 @@ const useBlogStore = create<BlogStoreType>((set) => {
         toast.error(error.response?.data?.error || "Login to like this post");
       } finally {
         set({ isLiking: false });
+      }
+    },
+
+    lastViewedId: null,
+    incrementPostView: async (slug: string) => {
+      if (get().lastViewedId === slug) return;
+      try {
+        set({ lastViewedId: slug });
+        await axios.patch(`/api/blog/${slug}/views`);
+        setTimeout(() => set({ lastViewedId: null }), 2000);
+      } catch (error) {
+        set({ lastViewedId: null });
+        console.error("Failed to increment view", error);
+      }
+    },
+
+    topPost: null,
+    getTopPost: async () => {
+      try {
+        const res = await axios.get("/api/blog/top-trending");
+        set({ topPost: res.data?.data });
+      } catch (error) {
+        console.error("Error fetching top post:", error);
       }
     },
   };

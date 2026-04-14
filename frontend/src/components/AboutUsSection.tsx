@@ -1,10 +1,9 @@
 import Image from "next/image";
-import React from "react";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import Heading from "./Heading";
 import Link from "next/link";
 
-const TrendingPostSection = () => {
+const AboutUsSection = () => {
   return (
     <section className="mt-20">
       <Heading>
@@ -59,4 +58,4 @@ const TrendingPostSection = () => {
   );
 };
 
-export default TrendingPostSection;
+export default AboutUsSection;

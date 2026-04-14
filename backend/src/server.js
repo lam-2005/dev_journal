@@ -2,6 +2,7 @@ import express from "express";
 import env from "./config/env.js";
 import AuthRoute from "./routes/auth.route.js";
 import PostRoute from "./routes/post.route.js";
+import EmailRoute from "./routes/email.route.js";
 import pool from "./lib/pool.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", AuthRoute);
 app.use("/api/blog", PostRoute);
+app.use("/api/email", EmailRoute);
 
 async function startServer() {
   try {

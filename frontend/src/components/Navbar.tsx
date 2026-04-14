@@ -85,7 +85,7 @@ const Navbar = () => {
                 )}
                 <FiChevronDown className="text-2xl" />
               </div>
-              {isOpen && <MenuDropDown />}
+              {isOpen && <MenuDropDown setIsOpen={setIsOpen} />}
             </li>
           ) : (
             <li className="px-2.5 ">

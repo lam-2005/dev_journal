@@ -8,6 +8,7 @@ const router = Router();
 router.post("/create", protectedRoute, PostController.create);
 router.get("/get-all", PostController.getAll);
 router.get("/get-recent", optionalRoute, PostController.getRecentPosts);
+router.get("/top-trending", PostController.getTopTrending);
 router.get("/get", (_, res) =>
   res.status(400).json({ message: "Vui lòng cung cấp User ID" }),
 );
@@ -22,4 +23,6 @@ router.post("/comment", protectedRoute, PostController.addComment);
 router.get("/post/comments/:id_post", PostController.getComments);
 
 router.post("/like", protectedRoute, PostController.likePost);
+
+router.patch("/:slug/views", PostController.updateViews);
 export default router;

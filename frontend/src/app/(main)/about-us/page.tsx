@@ -68,9 +68,6 @@ const AboutUs = () => {
           some problem in life. Hopefully, the insights shared here will provide
           some motivation or be helpful in your career path.
         </p>
-        <p>
-          <strong>Connect with me via:</strong> [GitHub] | [LinkedIn] | [Email]
-        </p>
       </div>
     </div>
   );
