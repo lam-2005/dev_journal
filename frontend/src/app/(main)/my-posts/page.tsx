@@ -12,7 +12,7 @@ const MyPostsPage = () => {
     useBlogStore();
   const { authUser } = useAuthStore();
   useEffect(() => {
-    getAllPostsByUserId(authUser?.id ?? "");
+    if (authUser?.id) getAllPostsByUserId(authUser?.id);
   }, [getAllPostsByUserId, authUser?.id]);
   return (
     <div className="max-w-200 mt-10 mx-auto min-h-[69vh]">
