@@ -25,7 +25,6 @@ const PostController = {
         });
       }
       if (!moderation.valid) {
-        console.log(moderation);
         return res.status(400).json({
           message: "The post was not accepted.",
           result: moderation,
@@ -184,7 +183,6 @@ const PostController = {
         });
       }
       if (!moderation.valid) {
-        console.log(moderation);
         return res.status(400).json({
           message: "The post was not accepted.",
           result: moderation,
