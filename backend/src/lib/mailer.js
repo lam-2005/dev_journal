@@ -3,12 +3,6 @@ import env from "../config/env.js";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  tls: {
-    ciphers: "SSLv3",
-    rejectUnauthorized: false,
-  },
-  port: 587,
-  secure: false,
   auth: {
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
