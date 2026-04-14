@@ -24,8 +24,6 @@ type AuthStoreType = {
   updateProfile: (data: Partial<UserType>) => Promise<boolean>;
 };
 
-const privateRoute = ["/create-post", "/my-posts", "/profile"];
-
 const useAuthStore = create<AuthStoreType>((set) => ({
   //check auth
   authUser: null,
@@ -85,13 +83,8 @@ const useAuthStore = create<AuthStoreType>((set) => ({
       await axios.post("api/auth/logout");
       set({ authUser: null });
       toast.success("Logged out successfully!");
-      const currentPath = window.location.pathname;
-      const isPrivateRoute = privateRoute.some((route: string) =>
-        currentPath.startsWith(route),
-      );
-      if (isPrivateRoute) {
-        window.location.reload();
-      }
+
+      window.location.href = "/";
     } catch (error) {
       toast.error("Error logging out");
       console.error("Error in logout", error);
