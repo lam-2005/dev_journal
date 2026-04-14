@@ -15,7 +15,7 @@ export const sendNotificationEmail = async (data) => {
   const { name, email, message } = data;
 
   const mailOptions = {
-    from: `"${name}" <${email}>`,
+    from: `<${env.EMAIL_USER}>`,
     to: env.EMAIL_USER,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
@@ -29,6 +29,7 @@ export const sendNotificationEmail = async (data) => {
         </blockquote>
       </div>
     `,
+    replyTo: email,
   };
 
   return transporter.sendMail(mailOptions);
