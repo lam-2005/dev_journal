@@ -24,11 +24,12 @@ type AuthStoreType = {
   updateProfile: (data: Partial<UserType>) => Promise<boolean>;
 };
 
-const useAuthStore = create<AuthStoreType>((set) => ({
+const useAuthStore = create<AuthStoreType>((set, get) => ({
   //check auth
   authUser: null,
   isCheckingAuth: false,
   checkAuth: async () => {
+    if (get().authUser) return;
     set({ isCheckingAuth: true });
     try {
       const res = await axios.get("/api/auth/check");
