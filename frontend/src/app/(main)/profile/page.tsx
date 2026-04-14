@@ -345,12 +345,12 @@ const ProfilePage = () => {
               <div className="w-full h-50 flex items-center justify-center font-mono">
                 <p>
                   You have no posts yet.{" "}
-                  <Link
-                    href={"/create-post"}
+                  <div
+                    onClick={() => (window.location.href = "/create-post")}
                     className="hover:text-primary underline font-bold"
                   >
                     Create one
-                  </Link>
+                  </div>
                 </p>
               </div>
             )}
