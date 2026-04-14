@@ -33,6 +33,10 @@ async function startServer() {
     });
   } catch (error) {
     console.error("Unable to connect to the database:");
+    console.error("--- DATABASE CONNECTION ERROR ---");
+    console.error("Message:", error.message); // Quan trọng nhất
+    console.error("Code:", error.code); // Mã lỗi (vd: 57P01, 28P01)
+    console.error("---------------------------------");
     console.error(error.message);
     process.exit(1);
   }
