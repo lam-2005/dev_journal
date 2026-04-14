@@ -3,9 +3,7 @@ import env from "@/config/environment";
 
 const instance = axios.create({
   baseURL:
-    env.NEXT_ENV === "development"
-      ? env.API_URL
-      : "https://dev-journal-7nn4.onrender.com",
+    env.NEXT_ENV === "development" ? "http://localhost:8080" : env.API_URL,
   withCredentials: true,
 });
 export default instance;
