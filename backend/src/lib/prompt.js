@@ -13,7 +13,7 @@ const moderateContentPrompt = (title, content) => {
 
     Yêu cầu:
     - Phân loại nội dung thành một trong các mức:
-    [AN TOÀN] / [CẦN XEM XÉT] / [VI PHẠM]
+    [AN TOÀN] / [VI PHẠM]
     - Giải thích ngắn gọn lý do (1–3 câu)
     - Nếu vi phạm, chỉ rõ tiêu chí nào bị vi phạm
     - Đề xuất cách chỉnh sửa để nội dung trở nên an toàn hơn (nếu có)
@@ -24,6 +24,9 @@ const moderateContentPrompt = (title, content) => {
     Nguyên tắc:
     - Ưu tiên độ chính xác hơn độ bao phủ
     - Không suy diễn ngoài nội dung được cung cấp
+    - Chỉ đánh giá [VI PHẠM] nếu nội dung mang tính cổ xúy, hướng dẫn thực hiện hoặc trực tiếp tấn công.
+    - Nếu nội dung đề cập đến các từ khóa nhạy cảm (như "hate speech", "sexual content") dưới góc độ kỹ thuật, lập trình, hoặc giải pháp phòng chống, PHẢI đánh giá là [AN TOÀN].
+    - Luôn đặt bài viết trong ngữ cảnh Blog Công nghệ/Học thuật.
 
     Nội dung cần kiểm duyệt:
     """
