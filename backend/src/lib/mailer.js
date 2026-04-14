@@ -1,19 +1,11 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465, // Cổng SSL ổn định nhất trên các server Cloud
-  secure: true, // true cho port 465
-
-  family: 4,
+  service: "gmail",
+  type: "OAuth2",
   auth: {
     user: env.EMAIL_USER,
-    pass: env.EMAIL_PASS, // Đảm bảo đây là App Password 16 ký tự
-  },
-  // Thêm cấu hình TLS để tránh bị chặn bởi firewall của Render
-  tls: {
-    servername: "smtp.gmail.com",
-    rejectUnauthorized: false,
+    pass: env.EMAIL_PASS,
   },
 });
 
@@ -21,8 +13,7 @@ export const sendNotificationEmail = async (data) => {
   const { name, email, message } = data;
 
   const mailOptions = {
-    from: `"${name}" <${env.EMAIL_USER}>`,
-    replyTo: email,
+    from: `"${name}" <${email}>`,
     to: env.EMAIL_USER,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
