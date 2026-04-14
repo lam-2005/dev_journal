@@ -10,10 +10,12 @@ import { useEffect } from "react";
 const MyPostsPage = () => {
   const { isGettingAllPostsByUserId, getAllPostsByUserId, postsByUserId } =
     useBlogStore();
-  const { authUser } = useAuthStore();
+  const { authUser, isCheckingAuth } = useAuthStore();
+
   useEffect(() => {
     if (authUser?.id) getAllPostsByUserId(authUser?.id);
   }, [getAllPostsByUserId, authUser?.id]);
+  if (isCheckingAuth) return <p>Please wait...</p>;
   return (
     <div className="max-w-200 mt-10 mx-auto min-h-[69vh]">
       <div className="flex justify-between items-center">
