@@ -3,10 +3,12 @@ import env from "../config/env.js";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 587, // Dùng 587 thay vì 465
-  secure: false, // false cho port 587
-  requireTLS: true,
-  family: 4,
+  tls: {
+    ciphers: "SSLv3",
+    rejectUnauthorized: false,
+  },
+  port: 587,
+  secure: false,
   auth: {
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
@@ -18,12 +20,11 @@ export const sendNotificationEmail = async (data) => {
 
   const mailOptions = {
     from: `"DevJournal" <${env.EMAIL_USER}>`,
-    to: env.EMAIL_USER,
-    replyTo: email,
+    to: email,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
       <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
-        <h2 style="color: #333;">Bạn có tin nhắn mới từ khách hàng</h2>
+        <h2 style="color: #333;">Bạn có tin nhắn mới từ người dùng</h2>
         <p><strong>Người gửi:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Nội dung:</strong></p>

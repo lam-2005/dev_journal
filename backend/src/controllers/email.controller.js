@@ -14,9 +14,15 @@ const EmailController = {
 
       const newContact = await EmailModel.contact(req.body);
 
-      sendNotificationEmail(req.body).catch((err) =>
-        console.error("Error is sending email: ", err),
-      );
+      try {
+        await sendNotificationEmail(req.body);
+      } catch (error) {
+        console.error("Error is sending email: ", error.message);
+        return res.status(400).json({
+          message: "Error sending email",
+          error: error.message,
+        });
+      }
 
       return res.status(201).json({
         success: true,
