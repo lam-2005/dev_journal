@@ -4,10 +4,12 @@ import MyPost from "@/components/MyPost";
 import NoPost from "@/components/NoPost";
 import useAuthStore from "@/store/useAuthStore";
 import useBlogStore from "@/store/useBlogStore";
-import Link from "next/link";
+
+import { useRouter } from "nextjs-toploader/app";
 import { useEffect } from "react";
 
 const MyPostsPage = () => {
+  const router = useRouter();
   const { isGettingAllPostsByUserId, getAllPostsByUserId, postsByUserId } =
     useBlogStore();
   const { authUser, isCheckingAuth } = useAuthStore();
@@ -20,9 +22,9 @@ const MyPostsPage = () => {
     <div className="max-w-200 mt-10 mx-auto min-h-[69vh]">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl">My Posts</h1>
-        <Link href={"/create-post"} className="font-mono">
+        <div onClick={() => router.push("/create-post")} className="font-mono">
           Create Post
-        </Link>
+        </div>
       </div>
       <div className="h-px w-full my-10 bg-foreground/20" />
       {isGettingAllPostsByUserId ? (
