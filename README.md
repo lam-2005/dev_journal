@@ -7,6 +7,10 @@ Nền tảng chia sẻ kiến thức, lưu trữ kinh nghiệm và ghi lại hà
 Truy cập website tại: [DevJournal](https://dev-journal-nine.vercel.app/)  
 > **Lưu ý**: Khi truy cập website, do API backend được host trên server miễn phí nên có thể mất một chút thời gian để khởi tạo lần đầu. Vui lòng chờ vài phút nếu thấy website tải lâu
 
+### Tài khoản đăng nhập: 
+> Email: abc@gmail.com
+> Mật khẩu: 123123
+
 ## Chức năng chính  
 
 - **Đăng ký/Đăng nhập**: Đăng nhập để có thể tạo bài viết, tương tác vói bài viết
