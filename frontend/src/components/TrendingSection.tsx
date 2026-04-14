@@ -21,7 +21,7 @@ const TrendingSection = () => {
     <section className="mt-40 relative">
       {/* Heading nằm bên phải để đối trọng với About Me */}
       <div className="flex justify-end mb-10">
-        <Heading>
+        <Heading dataAos="fade-left">
           Most <span className="font-extrabold ">Viewed</span>
         </Heading>
       </div>
@@ -29,7 +29,10 @@ const TrendingSection = () => {
       <div className="flex flex-col lg:flex-row items-center relative h-fit lg:h-140">
         {/* Phần ảnh: Chiếm bên trái và tràn ra ngoài một chút */}
         {topPost.image ? (
-          <div className="w-full lg:w-[60%] h-80 lg:h-full relative z-10 overflow-hidden shadow-2xl">
+          <div
+            className="w-full lg:w-[60%] h-80 lg:h-full relative z-10 overflow-hidden shadow-2xl"
+            data-aos="fade-right"
+          >
             <Image
               src={topPost.image}
               alt={topPost.title}
@@ -38,11 +41,14 @@ const TrendingSection = () => {
             />
           </div>
         ) : (
-          <NoThumbnail />
+          <NoThumbnail dataAos="fade-right" />
         )}
 
         {/* Phần nội dung: Đè lên ảnh một phần (Negative Margin) */}
-        <div className="w-[90%] lg:w-[45%] bg-foreground text-background p-10 lg:p-15 lg:-ml-20 z-20 relative shadow-2xl border-t-4 border-primary">
+        <div
+          className="w-[90%] lg:w-[45%] bg-foreground text-background p-10 lg:p-15 lg:-ml-20 z-20 relative shadow-2xl border-t-4 border-primary"
+          data-aos="fade-left"
+        >
           <p className="font-mono text-sm opacity-70 mb-4">
             {convertDate(topPost.create_at ?? "")} — {topPost.view} views
           </p>

@@ -3,9 +3,9 @@ import { convertDate, estimateReadingTime } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-const Post = ({ data }: { data: PostType }) => {
+const Post = ({ data, dataAos }: { data: PostType; dataAos?: string }) => {
   return (
-    <div className="w-235 bg-secondary-background">
+    <div className="w-235 bg-secondary-background" data-aos={dataAos}>
       {data.image && (
         <div className="w-full h-102.75">
           <Image

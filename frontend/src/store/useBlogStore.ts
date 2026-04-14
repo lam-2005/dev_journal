@@ -98,7 +98,6 @@ const useBlogStore = create<BlogStoreType>((set, get) => {
       set({ isGettingAllPostsRecent: true });
       try {
         const res = await axios.get("/api/blog/get-recent");
-        console.log(res.data);
 
         set({ postsRecent: res.data?.data || [] });
       } catch (error: any) {

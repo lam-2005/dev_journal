@@ -13,14 +13,16 @@ const BlogPage = () => {
   }, [getAllPosts]);
   return (
     <div className="mt-20">
-      <Heading>
+      <Heading dataAos="fade-right">
         <span className="font-extrabold text-7xl">Blog</span>
       </Heading>
       <div className="mt-20 flex flex-col items-center gap-15 min-h-[40vh]">
         {isGettingAllPosts ? (
           <LoadingSkeletonPost type="large" />
         ) : posts && posts.length > 0 ? (
-          posts.map((item) => <Post key={item.id} data={item} />)
+          posts.map((item) => (
+            <Post key={item.id} data={item} dataAos="fade-up" />
+          ))
         ) : (
           <div className="min-h-[80%]">
             <NoPost />

@@ -6,11 +6,14 @@ import Link from "next/link";
 const AboutUsSection = () => {
   return (
     <section className="mt-20">
-      <Heading>
+      <Heading dataAos="fade-right">
         <span className="font-extrabold">About</span> Me
       </Heading>
 
-      <div className="absolute z-9 max-w-[40%] h-125 right-0 -translate-y-20 ">
+      <div
+        className="absolute z-9 max-w-[40%] h-125 right-0 -translate-y-20 "
+        data-aos="fade-left"
+      >
         <Image
           src={"/trending-post.png"}
           alt="trending-post"
@@ -19,8 +22,15 @@ const AboutUsSection = () => {
           className="object-cover h-full object-center"
         />
       </div>
-      <div className="max-w-200 py-20 bg-secondary-background px-15 mt-40 relative left-1/2 -translate-x-3/5 z-10 ">
-        <div className="h-[95%] w-20 bg-primary z-11 absolute right-0 translate-x-1/2"></div>
+      <div
+        className="max-w-200 py-20 bg-secondary-background px-15 mt-40 relative left-1/2 -translate-x-3/5 z-10 "
+        data-aos="fade-up"
+      >
+        <div
+          className="h-[95%] w-20 bg-primary z-11 absolute right-0 translate-x-1/2"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        ></div>
         <h1 className="text-4xl w-[75%] font-bold line-clamp-3">
           The journey from Zero to Fullstack
         </h1>
