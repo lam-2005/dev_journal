@@ -9,7 +9,13 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin:
+      env.NODE_ENV === "development" ? "http://localhost:3000" : env.URL_CLIENT,
+    credentials: true,
+  }),
+);
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
@@ -29,7 +35,7 @@ async function startServer() {
     console.error("Unable to connect to the database:");
     console.error("--- DATABASE CONNECTION ERROR ---");
     console.error("Message:", error.message); // Quan trọng nhất
-    console.log("DB_URI có tồn tại không:", env.DB_URI ? "CÓ" : "KHÔNG");
+    console.error("Code:", error.code); // Mã lỗi (vd: 57P01, 28P01)
     console.error("---------------------------------");
     console.error(error.message);
     process.exit(1);
