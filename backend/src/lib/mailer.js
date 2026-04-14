@@ -1,19 +1,21 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  auth: {
+    user: env.EMAIL_USER,
+    pass: env.EMAIL_PASS,
+  },
+});
 
 export const sendNotificationEmail = async (data) => {
   const { name, email, message } = data;
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    service: "Gmail",
-    auth: {
-      user: env.EMAIL_USER,
-      pass: env.EMAIL_PASS,
-    },
-  });
+
   const mailOptions = {
-    from: `<${env.EMAIL_USER}>`,
+    from: `"DevJournal" <${env.EMAIL_USER}>`,
     to: env.EMAIL_USER,
+    replyTo: email,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
       <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
@@ -26,7 +28,6 @@ export const sendNotificationEmail = async (data) => {
         </blockquote>
       </div>
     `,
-    replyTo: email,
   };
 
   return transporter.sendMail(mailOptions);
