@@ -1,15 +1,12 @@
 import nodemailer from "nodemailer";
 import env from "../config/env.js";
 const transporter = nodemailer.createTransport({
-   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4,
+  service: "gmail",
+  host: "smtp.gmail.com",
   auth: {
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
   },
-  secure: true,
 });
 
 export const sendNotificationEmail = async (data) => {
@@ -32,13 +29,5 @@ export const sendNotificationEmail = async (data) => {
     `,
   };
 
-  return new Promise((resolve, reject) => {
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(info);
-      }
-    });
-  });
+  return transporter.sendMail(mailOptions);
 };
