@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport({
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
   },
+  secure: true,
 });
 
 export const sendNotificationEmail = async (data) => {
@@ -29,5 +30,13 @@ export const sendNotificationEmail = async (data) => {
     `,
   };
 
-  return transporter.sendMail(mailOptions);
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(info);
+      }
+    });
+  });
 };
