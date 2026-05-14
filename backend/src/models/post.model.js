@@ -164,7 +164,6 @@ const PostModel = {
   getTopTrendingPost: async () => {
     const query = `
     SELECT * FROM blogs 
-    WHERE create_at > NOW() - INTERVAL '7 days'
     ORDER BY view DESC 
     LIMIT 1;
   `;
