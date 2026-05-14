@@ -7,6 +7,7 @@ const transporter = nodemailer.createTransport({
     user: env.EMAIL_USER,
     pass: env.EMAIL_PASS,
   },
+  secure: true,
 });
 
 export const sendNotificationEmail = async (data) => {
@@ -14,7 +15,7 @@ export const sendNotificationEmail = async (data) => {
 
   const mailOptions = {
     from: `"DevJournal" <${env.EMAIL_USER}>`,
-    to: email,
+    to: env.EMAIL_USER,
     subject: `Phản hồi của người dùng ${name} về DevJournal`,
     html: `
       <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
